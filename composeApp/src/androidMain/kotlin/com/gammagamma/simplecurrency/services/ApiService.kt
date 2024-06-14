@@ -16,6 +16,6 @@ class ApiServiceImpl(private val client: HttpClient) : ApiService {
     
     override suspend fun getStatus(): String = client
 //        .get(Url("${Constants.SERVER_HOST}:${Constants.SERVER_PORT}")).body()
-        .get(Url("https://wesleybliss.com")).body()
+        .get("/").body()
     
 }
