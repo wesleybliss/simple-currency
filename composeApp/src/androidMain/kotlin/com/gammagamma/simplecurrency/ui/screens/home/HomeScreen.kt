@@ -58,12 +58,12 @@ fun HomeScreen(
             }
         }
         
-        /*AnimatedVisibility(viewModel.response.isNotBlank()) {
+        AnimatedVisibility(viewModel.response.isNotBlank()) {
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(painterResource(Res.drawable.compose_multiplatform), null)
                 Text("Response: ${viewModel.response}")
             }
-        }*/
+        }
         
         /*if (sortableEnabled) SortableList()*/
         

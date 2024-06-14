@@ -27,13 +27,16 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.android)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.compose.reorderable.list)
         }
-        
+            
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -55,7 +58,11 @@ kotlin {
 android {
     namespace = "com.gammagamma.simplecurrency"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-
+    
+    sourceSets["debug"].manifest.srcFile("src/androidDebug/AndroidManifest.xml")
+    sourceSets["debug"].res.srcDirs("src/androidDebug/res")
+    sourceSets["debug"].resources.srcDirs("src/commonMain/resources")
+    
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
@@ -73,6 +80,11 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            isDebuggable = true
+            applicationIdSuffix = ".debug" // Optional: Add suffix to debug application ID
+            // ... other debug configurations
+        }
         getByName("release") {
             isMinifyEnabled = false
         }
