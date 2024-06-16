@@ -12,9 +12,12 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val apiService: ApiService) : BaseViewModel() {
     
+    var loading by mutableStateOf(false)
     var response by mutableStateOf("")
     
     fun fetchStatus() {
+        
+        loading = true
         
         viewModelScope.launch {
             try {
@@ -22,12 +25,16 @@ class HomeViewModel(private val apiService: ApiService) : BaseViewModel() {
                 response = "${status.name} @ version: ${status.version}"
             } catch (e: Exception) {
                 Log.e("fetchStatus: ${e.message ?: e.cause ?: "Unknown"}")
+            } finally {
+                loading = false
             }
         }
         
     }
     
     fun fetchCurrencies() {
+        
+        loading = true
         
         viewModelScope.launch {
             try {
@@ -39,6 +46,8 @@ class HomeViewModel(private val apiService: ApiService) : BaseViewModel() {
                 response = items.joinToString("\n")
             } catch (e: Exception) {
                 Log.e("fetchCurrencies: ${e.message ?: e.cause ?: "Unknown"}")
+            } finally {
+                loading = false
             }
         }
         
@@ -46,12 +55,16 @@ class HomeViewModel(private val apiService: ApiService) : BaseViewModel() {
     
     fun fetchPairs() {
         
+        loading = true
+        
         viewModelScope.launch {
             try {
                 val res = apiService.getPairs("USD", "EUR", "JPY")
                 response = "(from ${res.source}): ${res.data.rates["USD"]} = ${res.data.rates["EUR"]}EUR, ${res.data.rates["JPY"]}JPY"
             } catch (e: Exception) {
                 Log.e("fetchPairs: ${e.message ?: e.cause ?: "Unknown"}")
+            } finally {
+                loading = false
             }
         }
         

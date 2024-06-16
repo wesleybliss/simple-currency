@@ -38,24 +38,17 @@ fun HomeScreen(
     
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         
-        Button(onClick = { showContent = !showContent }) {
-            Text("Click me!")
-        }
+        Button(onClick = { showContent = !showContent }) { Text("Click me!") }
+        Button(onClick = { navController.navigate(Route.About.path) }) { Text("Go to About screen") }
         
-        Button(onClick = { navController.navigate(Route.About.path) }) {
-            Text("Go to About screen")
-        }
+        Button(onClick = { viewModel.fetchStatus() }) { Text("Fetch Status") }
+        Button(onClick = { viewModel.fetchCurrencies() }) { Text("Fetch Currencies") }
+        Button(onClick = { viewModel.fetchPairs() }) { Text("Fetch Pairs") }
         
-        Button(onClick = { viewModel.fetchStatus() }) {
-            Text("Fetch Status")
-        }
-        
-        Button(onClick = { viewModel.fetchCurrencies() }) {
-            Text("Fetch Currencies")
-        }
-        
-        Button(onClick = { viewModel.fetchPairs() }) {
-            Text("Fetch Pairs")
+        AnimatedVisibility(viewModel.loading) {
+            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Loading...")
+            }
         }
         
         AnimatedVisibility(showContent) {
