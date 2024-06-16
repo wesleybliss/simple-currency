@@ -50,6 +50,10 @@ fun HomeScreen(
             Text("Fetch Status")
         }
         
+        Button(onClick = { viewModel.fetchPairs() }) {
+            Text("Fetch Pairs")
+        }
+        
         AnimatedVisibility(showContent) {
             val greeting = remember { Greeting().greet() }
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {

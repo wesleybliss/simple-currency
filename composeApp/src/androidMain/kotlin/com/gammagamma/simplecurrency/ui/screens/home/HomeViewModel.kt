@@ -26,4 +26,17 @@ class HomeViewModel(private val apiService: ApiService) : BaseViewModel() {
         
     }
     
+    fun fetchPairs() {
+        
+        viewModelScope.launch {
+            try {
+                val res = apiService.getPairs("USD", "EUR", "JPY")
+                response = "(from ${res.source}): ${res.data.rates["USD"]} = ${res.data.rates["EUR"]}EUR, ${res.data.rates["JPY"]}JPY"
+            } catch (e: Exception) {
+                Log.e("fetchPairs: ${e.message ?: e.cause ?: "Unknown"}")
+            }
+        }
+        
+    }
+    
 }
