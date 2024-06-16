@@ -15,6 +15,7 @@ import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.*
 import io.ktor.http.URLProtocol
+import io.ktor.http.path
 
 val networkModule = module {
     
@@ -52,6 +53,8 @@ val networkModule = module {
                 protocol = URLProtocol.HTTP
                 host = Constants.SERVER_HOST
                 port = Constants.SERVER_PORT
+                path("api/")
+                // header("X-Custom-Header", "Hello")
             }
         }
         

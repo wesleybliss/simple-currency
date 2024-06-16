@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -24,6 +25,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             
             implementation(libs.timber)
+            implementation(libs.kotlinx.serialization)
             implementation(libs.koin.core)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)

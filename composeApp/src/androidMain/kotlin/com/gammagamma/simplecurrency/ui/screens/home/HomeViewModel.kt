@@ -18,7 +18,7 @@ class HomeViewModel(private val apiService: ApiService) : BaseViewModel() {
         viewModelScope.launch {
             try {
                 val status = apiService.getStatus()
-                response = status
+                response = "${status.name} @ version: ${status.version}"
             } catch (e: Exception) {
                 Log.e("fetchStatus: ${e.message ?: e.cause ?: "Unknown"}")
             }
