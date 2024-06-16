@@ -1,5 +1,6 @@
 package com.gammagamma.simplecurrency.services
 
+import com.gammagamma.simplecurrency.domain.model.Currencies
 import com.gammagamma.simplecurrency.domain.model.Pairs
 import com.gammagamma.simplecurrency.domain.model.Response
 import com.gammagamma.simplecurrency.domain.model.Status
@@ -14,19 +15,20 @@ interface ApiService {
     
     // suspend fun getStatus(): /*User*/ String
     suspend fun getStatus(): Status
+    suspend fun getCurrencies(): Response<Currencies>
     suspend fun getPairs(base: String, vararg targets: String): Response<Pairs>
     
 }
 
 class ApiServiceImpl(private val client: HttpClient) : ApiService {
     
-    override suspend fun getStatus(): Status = client
-        .get("status").body()
+    override suspend fun getStatus() : Status =
+        client.get("status").body()
     
-    /*override suspend fun getPairs(base: String, vararg targets: String): Response<Pairs> = client
-        .get("pairs?value=1&base=${base}&targets=${targets.joinToString { "," }}").body()*/
+    override suspend fun getCurrencies(): Response<Currencies> =
+        client.get("currencies").body()
     
-    override suspend fun getPairs(base: String, vararg targets: String): Response<Pairs> {
+    override suspend fun getPairs(base: String, vararg targets: String) : Response<Pairs> {
         
         val queryString = NetworkUtils.buildQueryString(
             "value" to 1,

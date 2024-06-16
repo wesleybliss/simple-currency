@@ -50,6 +50,10 @@ fun HomeScreen(
             Text("Fetch Status")
         }
         
+        Button(onClick = { viewModel.fetchCurrencies() }) {
+            Text("Fetch Currencies")
+        }
+        
         Button(onClick = { viewModel.fetchPairs() }) {
             Text("Fetch Pairs")
         }
