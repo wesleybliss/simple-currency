@@ -3,7 +3,12 @@ package com.gammagamma.simplecurrency.domain.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Currencies(val currencies: Map<String, String>)
+data class Currencies(val currencies: Map<String, String>) {
+    
+    fun asDemoString() = currencies.entries
+        .joinToString("\n") { (symbol, name) -> "$symbol: $name" }
+    
+}
 
 /*
 Example response:

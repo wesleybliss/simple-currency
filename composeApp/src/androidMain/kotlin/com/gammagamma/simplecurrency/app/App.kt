@@ -9,11 +9,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     
-    /*viewModelScope.launch {
-    val user = myApiService.getUser(123)
-    // Handle the user data
-    }*/
-    
     MaterialTheme {
         
         AppNavHost()

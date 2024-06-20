@@ -25,6 +25,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             
             implementation(libs.timber)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.coroutines.android)
             implementation(libs.kotlinx.serialization)
             implementation(libs.koin.core)
             implementation(libs.koin.android)
@@ -36,6 +38,7 @@ kotlin {
             implementation(libs.ktor.client.android)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kstore.file)
             implementation(libs.compose.reorderable.list)
         }
             
@@ -52,6 +55,9 @@ kotlin {
             implementation(libs.androidx.compose.material)
             implementation(libs.androidx.compose.uiToolingPreview)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.kstore)
         }
         
     }

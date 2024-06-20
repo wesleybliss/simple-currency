@@ -6,11 +6,10 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
+import com.gammagamma.simplecurrency.services.IApiService
 import com.gammagamma.simplecurrency.services.ApiService
-import com.gammagamma.simplecurrency.services.ApiServiceImpl
 import com.gammagamma.simplecurrency.services.Log
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.*
@@ -60,7 +59,7 @@ val networkModule = module {
         
     } }
     
-    factory<ApiService> { ApiServiceImpl(get()) }
+    factory<IApiService> { ApiService(get()) }
     
 //    factoryOf(::Hello)
     

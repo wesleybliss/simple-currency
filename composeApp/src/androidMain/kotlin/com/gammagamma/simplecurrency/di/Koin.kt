@@ -9,7 +9,9 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
     
     modules(
         androidModule,
+        storeModule,
         networkModule,
+        repositoriesModule,
     )
     
 }

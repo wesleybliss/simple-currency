@@ -8,10 +8,8 @@ import com.gammagamma.simplecurrency.utils.NetworkUtils
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.http.Url
-import models.User
 
-interface ApiService {
+interface IApiService {
     
     // suspend fun getStatus(): /*User*/ String
     suspend fun getStatus(): Status
@@ -20,7 +18,7 @@ interface ApiService {
     
 }
 
-class ApiServiceImpl(private val client: HttpClient) : ApiService {
+class ApiService(private val client: HttpClient) : IApiService {
     
     override suspend fun getStatus() : Status =
         client.get("status").body()
