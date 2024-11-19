@@ -1,6 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_currency/domain/constants/constants.dart';
+import 'package:simple_currency/domain/di/spot.dart';
+import 'package:simple_currency/domain/di/spot_module.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 /*import 'package:memento/di/spot.dart';
@@ -42,10 +44,10 @@ class Application {
     // CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
 
     // Register service locator dependencies
-    /*Spot.logging = false;
+    Spot.logging = false;
     SpotModule.registerDependencies();
 
-    // Initialize ObjectBox database
+    /*// Initialize ObjectBox database
     await MementoStore.initializeStore();
 
     // Register Google Font licenses

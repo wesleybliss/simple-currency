@@ -6,9 +6,13 @@ import 'package:simple_currency/domain/constants/constants.dart';
 
 class SimpleCurrencyApp extends StatefulWidget {
   SimpleCurrencyApp({super.key}) {
-    final router = FluroRouter();
-    Routes.configureRoutes(router);
-    Application.router = router;
+    if (!Application.isInitialized) {
+      final router = FluroRouter();
+      Routes.configureRoutes(router);
+      Application.router = router;
+    }
+
+
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_currency/domain/di/providers/net.dart';
-import 'package:simple_currency/domain/io/repos/currencies_repo.dart';
+import 'package:simple_currency/domain/di/spot.dart';
+import 'package:simple_currency/domain/io/repos/i_currencies_repo.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/domain/models/currency_response.dart';
 import 'package:simple_currency/utils/logger.dart';
@@ -15,7 +15,7 @@ class CurrenciesState {
 
 class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   final log = Logger('CurrenciesNotifier');
-  final CurrenciesRepo currenciesRepo;
+  final ICurrenciesRepo currenciesRepo;
 
   CurrenciesNotifier(this.currenciesRepo) : super(CurrenciesState());
 
@@ -33,6 +33,6 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 }
 
 final currenciesProvider = StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
-  final currenciesRepo = ref.watch(currenciesRepoProvider);
+  final currenciesRepo = spot<ICurrenciesRepo>();
   return CurrenciesNotifier(currenciesRepo);
 });

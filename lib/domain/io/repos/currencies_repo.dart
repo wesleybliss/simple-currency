@@ -1,14 +1,19 @@
 import 'package:simple_currency/domain/io/net/dio_client.dart';
+import 'package:simple_currency/domain/io/repos/i_currencies_repo.dart';
 import 'package:simple_currency/domain/models/currency_response.dart';
 import 'package:simple_currency/utils/logger.dart';
 
-class CurrenciesRepo {
+class CurrenciesRepo implements ICurrenciesRepo {
   
   CurrenciesRepo(this.dio);
   
+  @override
   final log = Logger('CurrenciesRepo');
-  final DioClient dio;
   
+  @override
+  final DioClient dio;
+
+  @override
   Future<CurrencyResponse?> fetchCurrencies() async {
     log.d('getCurrencies');
     
