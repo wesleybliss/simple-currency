@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:simple_currency/domain/constants/constants.dart';
 import 'package:simple_currency/domain/di/spot.dart';
 import 'package:simple_currency/domain/di/spot_module.dart';
+import 'package:simple_currency/store/SimpleCurrencyStore.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 /*import 'package:memento/di/spot.dart';
@@ -47,10 +48,10 @@ class Application {
     Spot.logging = false;
     SpotModule.registerDependencies();
 
-    /*// Initialize ObjectBox database
-    await MementoStore.initializeStore();
+    // Initialize ObjectBox database
+    await SimpleCurrencyStore.initializeStore();
 
-    // Register Google Font licenses
+    /*// Register Google Font licenses
     LicenseUtils.registerLicenses();
 
     // Initialize notifications service
@@ -59,7 +60,7 @@ class Application {
     // We can register a logger now that we've initialized
     final log = Logger('Application');
     final auth = spot<IAuth>();
-
+  
     // Watch for auth changes and re-initialize the private GraphQL
     // instance, so it can add the correct auth header middleware
     auth.observableToken.addListener(() {

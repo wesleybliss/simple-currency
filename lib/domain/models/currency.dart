@@ -1,13 +1,17 @@
 
+import 'package:objectbox/objectbox.dart';
+
+@Entity()
 class Currency {
-  // final int id;
+  @Id()
+  int id = 0;
   final String symbol;
   final String name;
   final double rate;
   final bool selected;
 
   Currency({
-    // required this.id,
+    this.id = 0,
     required this.symbol,
     required this.name,
     required this.rate,
