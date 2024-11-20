@@ -10,7 +10,8 @@ class HomeLoading extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Trigger the fetch on build
     Utils.nextTick(() {
-      ref.read(currenciesProvider.notifier).fetchCurrencies();
+      // ref.read(currenciesProvider.notifier).fetchCurrencies();
+      ref.read(currenciesProvider.notifier).readCurrencies();
     });
 
     return const Center(child: CircularProgressIndicator());

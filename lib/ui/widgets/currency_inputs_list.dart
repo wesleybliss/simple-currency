@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 
 class CurrencyInputsList extends StatelessWidget {
-  const CurrencyInputsList({super.key, required List<Currency> this.currencies});
+  const CurrencyInputsList({super.key, required this.currencies});
 
   final List<Currency> currencies;
   

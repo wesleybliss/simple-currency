@@ -1,5 +1,6 @@
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:simple_currency/domain/models/model.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 import '../objectbox.g.dart';
@@ -36,5 +37,45 @@ abstract class SimpleCurrencyStore {
       spot<AUserDao>().deleteAll(areYouReallySure: true);
       spot<APostDao>().deleteAll(areYouReallySure: true);
     }*/
+  }
+
+  static Future<void> updateManyAsync<T>(
+      List<T> fetchedEntities,
+      T Function(T prev) updateFunction,
+  ) async {
+
+    final box = store.box<T>();
+    // Fetch existing entities from ObjectBox
+    final existingEntities = box.getAll();
+
+    // Create a map for quick lookup of existing entities by their unique identifier
+    // final existingEntityMap = {getEntityKey(existing): existing for existing in existingEntities};
+    final Map<int, T> existingEntityMap = {};
+    
+    for (var existing in existingEntities) {
+      existingEntityMap[getEntityKey(existing)] = existing;
+    }
+    
+    for (var fetchedEntity in fetchedEntities) {
+      final key = getEntityKey(fetchedEntity);
+      
+      // Check if the entity already exists
+      if (existingEntityMap.containsKey(key)) {
+        // Update the existing entity using the provided update function
+        var existingEntity = existingEntityMap[key]!;
+        var updatedEntity = updateFunction(existingEntity);
+        box.put(updatedEntity);
+      } else {
+        // If it doesn't exist, add it as a new entry
+        box.put(fetchedEntity); // This will insert a new entity
+      }
+    }
+  }
+
+  // Function to get the unique key of an entity (you need to implement this based on your entity)
+  static int getEntityKey<T>(T entity) {
+    return (entity as Model).id; // Assuming 'id' is the unique identifier for Currency
+    // Add more cases here for other types as needed
+    throw Exception('Unsupported entity type');
   }
 }

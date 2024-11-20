@@ -1,9 +1,15 @@
 
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:objectbox/objectbox.dart';
+import 'package:simple_currency/domain/models/model.dart';
+
+part 'currency.g.dart';
 
 @Entity()
-class Currency {
+@CopyWith()
+class Currency extends Model {
   @Id()
+  @override
   int id = 0;
   final String symbol;
   final String name;
@@ -24,7 +30,7 @@ class Currency {
       symbol: json['symbol'],
       name: json['name'],
       rate: (json['rate'] as num).toDouble(),
-      selected: false,
+      selected: json['symbol'] == 'AFN',
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/store/SimpleCurrencyStore.dart';
+import 'package:simple_currency/ui/widgets/currencies_list.dart';
 import 'package:simple_currency/ui/widgets/currency_inputs_list.dart';
 import 'package:simple_currency/utils/logger.dart';
 
@@ -13,11 +14,13 @@ class HomeReady extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final log = Logger('HomeReady');
     final state = ref.watch(currenciesProvider);
+    final selectedItems = ref.read(currenciesProvider.notifier).selectedCurrencies;
     
     void debugCheckStorage() async {
       final currencyBox = store.box<Currency>();
       final items = await currencyBox.getAllAsync();
       log.d('Currency items: ${items.length}');
+      log.d('Selected Currencies: $selectedItems');
     }
     
     void onFetchCurrenciesClick() {
@@ -35,7 +38,7 @@ class HomeReady extends ConsumerWidget {
         child: const Text('Debug Check Storage'),
       ),
       Expanded(
-        child: CurrencyInputsList(currencies: state.currencies ?? []),
+        child: CurrenciesList(currencies: state.currencies ?? []),
       )]);
   }
 }

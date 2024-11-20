@@ -45,6 +45,9 @@ dependencies:
   # Observable state management
   flutter_riverpod: ^2.3.6
   
+  # Data
+  copy_with_extension: ^5.0.4
+  
   # Networking
   dio: ^5.7.0
   
@@ -73,6 +76,7 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   
   build_runner: any
+  copy_with_extension_gen: ^5.0.4
   objectbox_generator: any
 
 # For information on the generic Dart part of this file, see the
