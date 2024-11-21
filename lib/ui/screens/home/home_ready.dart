@@ -35,13 +35,20 @@ class HomeReady extends ConsumerWidget {
     }
     
     if (selectedCurrencies.isEmpty == true) {
-      Column(children: [
-          const Text('You don\'t have any currencies selected yet. \nAdd some by clicking the button below.'),
-          ElevatedButton(
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Center(
+            child: Text('You don\'t have any currencies selected yet. \nAdd some by clicking the button below.')
+          ),
+          const SizedBox(height: 24.0),
+          TextButton(
             onPressed: () => Application.router.navigateTo(context, '/currencies'),
             child: const Text('Manage Currencies'),
           ),
-      ]);
+        ]
+      );
     }
     
     return Column(children: [
@@ -61,7 +68,8 @@ class HomeReady extends ConsumerWidget {
         child: const Text('Debug Check Storage'),
       ),
       Expanded(
-        child: CurrenciesList(currencies: state.currencies),
-      )]);
+        child: CurrenciesList(currencies: selectedCurrencies),
+      ),
+    ]);
   }
 }
