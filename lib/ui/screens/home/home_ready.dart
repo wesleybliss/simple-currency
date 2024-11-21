@@ -5,6 +5,7 @@ import 'package:simple_currency/domain/di/providers/state/currencies_provider.da
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/store/SimpleCurrencyStore.dart';
 import 'package:simple_currency/ui/widgets/currencies_list.dart';
+import 'package:simple_currency/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 class HomeReady extends ConsumerWidget {
@@ -67,8 +68,11 @@ class HomeReady extends ConsumerWidget {
         onPressed: debugCheckStorage,
         child: const Text('Debug Check Storage'),
       ),
-      Expanded(
+      /*Expanded(
         child: CurrenciesList(currencies: selectedCurrencies),
+      ),*/
+      Expanded(
+        child: CurrenciesInputsList(currencies: selectedCurrencies),
       ),
     ]);
   }
