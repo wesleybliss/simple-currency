@@ -17,6 +17,8 @@ abstract class _$CurrencyCWProxy {
 
   Currency selected(bool selected);
 
+  Currency order(int order);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Currency(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -29,6 +31,7 @@ abstract class _$CurrencyCWProxy {
     String? name,
     double? rate,
     bool? selected,
+    int? order,
   });
 }
 
@@ -54,6 +57,9 @@ class _$CurrencyCWProxyImpl implements _$CurrencyCWProxy {
   Currency selected(bool selected) => this(selected: selected);
 
   @override
+  Currency order(int order) => this(order: order);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Currency(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -67,6 +73,7 @@ class _$CurrencyCWProxyImpl implements _$CurrencyCWProxy {
     Object? name = const $CopyWithPlaceholder(),
     Object? rate = const $CopyWithPlaceholder(),
     Object? selected = const $CopyWithPlaceholder(),
+    Object? order = const $CopyWithPlaceholder(),
   }) {
     return Currency(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -89,6 +96,10 @@ class _$CurrencyCWProxyImpl implements _$CurrencyCWProxy {
           ? _value.selected
           // ignore: cast_nullable_to_non_nullable
           : selected as bool,
+      order: order == const $CopyWithPlaceholder() || order == null
+          ? _value.order
+          // ignore: cast_nullable_to_non_nullable
+          : order as int,
     );
   }
 }

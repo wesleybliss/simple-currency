@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:6469407493093378991",
-      "lastPropertyId": "5:8663037091240134135",
+      "lastPropertyId": "6:5130289915778436860",
       "name": "Currency",
       "properties": [
         {
@@ -35,6 +35,11 @@
           "id": "5:8663037091240134135",
           "name": "selected",
           "type": 1
+        },
+        {
+          "id": "6:5130289915778436860",
+          "name": "order",
+          "type": 6
         }
       ],
       "relations": []

@@ -22,7 +22,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(1, 6469407493093378991),
       name: 'Currency',
-      lastPropertyId: const obx_int.IdUid(5, 8663037091240134135),
+      lastPropertyId: const obx_int.IdUid(6, 5130289915778436860),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -50,6 +50,11 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(5, 8663037091240134135),
             name: 'selected',
             type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 5130289915778436860),
+            name: 'order',
+            type: 6,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -115,12 +120,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectToFB: (Currency object, fb.Builder fbb) {
           final symbolOffset = fbb.writeString(object.symbol);
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(6);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, symbolOffset);
           fbb.addOffset(2, nameOffset);
           fbb.addFloat64(3, object.rate);
           fbb.addBool(4, object.selected);
+          fbb.addInt64(5, object.order);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -137,12 +143,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.Float64Reader().vTableGet(buffer, rootOffset, 10, 0);
           final selectedParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
+          final orderParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           final object = Currency(
               id: idParam,
               symbol: symbolParam,
               name: nameParam,
               rate: rateParam,
-              selected: selectedParam);
+              selected: selectedParam,
+              order: orderParam);
 
           return object;
         })
@@ -172,4 +181,8 @@ class Currency_ {
   /// See [Currency.selected].
   static final selected =
       obx.QueryBooleanProperty<Currency>(_entities[0].properties[4]);
+
+  /// See [Currency.order].
+  static final order =
+      obx.QueryIntegerProperty<Currency>(_entities[0].properties[5]);
 }

@@ -3,6 +3,7 @@ import 'package:simple_currency/domain/di/spot.dart';
 import 'package:simple_currency/domain/io/repos/i_currencies_repo.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/domain/models/currency_response.dart';
+import 'package:simple_currency/objectbox.g.dart';
 import 'package:simple_currency/store/SimpleCurrencyStore.dart';
 import 'package:simple_currency/utils/logger.dart';
 
@@ -28,6 +29,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   void setCurrency(Currency currency) {
     final next = state.currencies.map((e) => e.id == currency.id ? currency : e).toList();
     state = CurrenciesState(currencies: next);
+    currencyBox.put(currency);
   }
   
   Future<void> readCurrencies({ bool showLoading = true }) async {
@@ -35,7 +37,8 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       state = CurrenciesState(loading: true);
     }
     
-    final items = await currencyBox.getAllAsync();
+    // final items = await currencyBox.getAllAsync();
+    final items = await currencyBox.query().order(Currency_.order).build().findAsync();
     
     state = CurrenciesState(currencies: items, loading: false);
     

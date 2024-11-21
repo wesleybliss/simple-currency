@@ -23,7 +23,9 @@ class Currency extends Model {
   
   final String name;
   final double rate;
+  
   final bool selected;
+  int order;
 
   Currency({
     this.id = 0,
@@ -31,11 +33,12 @@ class Currency extends Model {
     required this.name,
     required this.rate,
     required this.selected,
+    required this.order,
   });
 
   @override
   String toString() {
-    return 'Currency{id: $id, symbol: $symbol, name: $name, rate: $rate, selected: $selected}';
+    return 'Currency{id: $id, symbol: $symbol, name: $name, rate: $rate, selected: $selected, order: $order}';
   }
   
   factory Currency.fromJson(Map<String, dynamic> json) {
@@ -44,6 +47,7 @@ class Currency extends Model {
       name: json['name'],
       rate: (json['rate'] as num).toDouble(),
       selected: false,
+      order: 0,
     );
   }
 }
