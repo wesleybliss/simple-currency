@@ -198,6 +198,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  currency_formatter:
+    dependency: "direct main"
+    description:
+      name: currency_formatter
+      sha256: "8d4e1762e226289e4abe902075d167029617553c913309b34a227c52c61dd063"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
   dart_style:
     dependency: transitive
     description:
@@ -357,6 +365,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0"
   io:
     dependency: transitive
     description:
@@ -413,6 +429,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  locale_names:
+    dependency: "direct main"
+    description:
+      name: locale_names
+      sha256: "7a89ca54072f4f13d0f5df5a9ba69337554bf2fd057d1dd2a238898f3f159374"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   logging:
     dependency: transitive
     description:
@@ -613,6 +637,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  sealed_currencies:
+    dependency: "direct main"
+    description:
+      name: sealed_currencies
+      sha256: b8aa884a4b5c061883d818e8e58f62b9057d59530b71660e4ced4edfa6b514fc
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
+  sealed_languages:
+    dependency: transitive
+    description:
+      name: sealed_languages
+      sha256: fbe2763bfac54ee8a52674c61588c4f1f9f260fd7db3782cbff3d154e952a918
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   shared_preferences:
     dependency: "direct main"
     description:

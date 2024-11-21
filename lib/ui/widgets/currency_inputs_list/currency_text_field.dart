@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_currency/domain/models/currency.dart';
+import 'package:simple_currency/utils/currency_input_formatter.dart';
 
 class CurrencyTextField extends StatelessWidget {
   final Currency item;
@@ -26,6 +27,7 @@ class CurrencyTextField extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
+        // CurrencyInputFormatter(item.symbol),
       ],
       onChanged: (text) {
         onTextChanged(item.symbol, text);

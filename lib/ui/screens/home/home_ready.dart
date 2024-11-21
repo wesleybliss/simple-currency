@@ -48,6 +48,10 @@ class HomeReady extends ConsumerWidget {
             onPressed: () => Application.router.navigateTo(context, '/currencies'),
             child: const Text('Manage Currencies'),
           ),
+          TextButton(
+            onPressed: onFetchCurrenciesClick,
+            child: const Text('Fetch Currencies'),
+          ),
         ]
       );
     }
@@ -68,9 +72,6 @@ class HomeReady extends ConsumerWidget {
         onPressed: debugCheckStorage,
         child: const Text('Debug Check Storage'),
       ),
-      /*Expanded(
-        child: CurrenciesList(currencies: selectedCurrencies),
-      ),*/
       Expanded(
         child: CurrenciesInputsList(currencies: selectedCurrencies),
       ),
