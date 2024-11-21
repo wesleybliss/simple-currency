@@ -7,11 +7,15 @@ import 'package:simple_currency/store/SimpleCurrencyStore.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 class CurrenciesState {
-  final List<Currency>? currencies;
+  final List<Currency> currencies;
   final bool loading;
   final String? error;
 
-  CurrenciesState({this.currencies, this.loading = false, this.error});
+  CurrenciesState({
+    List<Currency>? currencies,
+    this.loading = false,
+    this.error,
+  }) : currencies = currencies ?? List.empty();
 }
 
 class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
@@ -21,13 +25,9 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
   CurrenciesNotifier(this.currenciesRepo) : super(CurrenciesState());
 
-  List<Currency> get selectedCurrencies {
-    return state.currencies?.where((currency) => currency.selected).toList() ?? [];
-  }
-  
   void setCurrency(Currency currency) {
-    final next = (state.currencies ?? []).map((e) => e.id == currency.id ? currency : e).toList();
-    state = CurrenciesState(currencies: next, loading: false);
+    final next = state.currencies.map((e) => e.id == currency.id ? currency : e).toList();
+    state = CurrenciesState(currencies: next);
   }
   
   Future<void> readCurrencies({ bool showLoading = true }) async {
@@ -37,10 +37,15 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     
     final items = await currencyBox.getAllAsync();
     
-    state = CurrenciesState(currencies: items ?? [], loading: false);
+    state = CurrenciesState(currencies: items, loading: false);
     
-    log.d('readCurrencies: ${items.map((e) => '${e.symbol}: (${e.selected})').join(', ')}');
+    log.d('readCurrencies:\n${items.map((e) => '${e.symbol}: (${e.selected})').join('\n')}');
     
+  }
+
+  Future<void> clearCurrencies() async {
+    await currencyBox.removeAllAsync();
+    state = CurrenciesState(currencies: [], loading: false);
   }
   
   Future<void> fetchCurrencies() async {
@@ -62,4 +67,11 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 final currenciesProvider = StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
   final currenciesRepo = spot<ICurrenciesRepo>();
   return CurrenciesNotifier(currenciesRepo);
+});
+
+final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
+  // Watch the state from the currenciesProvider
+  final currenciesState = ref.watch(currenciesProvider);
+  // Derive the selected currencies
+  return currenciesState.currencies.where((currency) => currency.selected).toList();
 });

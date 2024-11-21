@@ -1,8 +1,10 @@
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_currency/ui/screens/currencies/currencies_screen.dart';
 import 'package:simple_currency/ui/screens/error/ErrorScreen.dart';
 import 'package:simple_currency/ui/screens/home/home_screen.dart';
+import 'package:simple_currency/ui/screens/settings/settings_screen.dart';
 
 typedef ParamsHandler = Widget Function(Map<String, dynamic> params);
 
@@ -38,3 +40,5 @@ final errorHandler = handlerFor(const ErrorScreen(message: '@todo Error'));
 //final splashHandler = handlerFor(SplashScreen(), RouteWrapper.none);
 
 final homeHandler = handlerFor(const HomeScreen());
+final settingsHandler = handlerFor(const SettingsScreen());
+final currenciesHandler = handlerFor(const CurrenciesScreen());

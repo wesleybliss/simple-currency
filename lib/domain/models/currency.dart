@@ -11,7 +11,16 @@ class Currency extends Model {
   @Id()
   @override
   int id = 0;
+
+  /*
+   * The REPLACE strategy will add a new object with a different ID.
+   * As relations (ToOne/ToMany) reference objects by ID, if the previous
+   * object was referenced in any relations, these need to be updated manually.
+   * https://docs.objectbox.io/entity-annotations#unique-constraints
+   */
+  @Unique(onConflict: ConflictStrategy.replace)
   final String symbol;
+  
   final String name;
   final double rate;
   final bool selected;
@@ -24,13 +33,17 @@ class Currency extends Model {
     required this.selected,
   });
 
+  @override
+  String toString() {
+    return 'Currency{id: $id, symbol: $symbol, name: $name, rate: $rate, selected: $selected}';
+  }
+  
   factory Currency.fromJson(Map<String, dynamic> json) {
     return Currency(
-      // id: json['id'],
       symbol: json['symbol'],
       name: json['name'],
       rate: (json['rate'] as num).toDouble(),
-      selected: json['symbol'] == 'AFN',
+      selected: false,
     );
   }
 }

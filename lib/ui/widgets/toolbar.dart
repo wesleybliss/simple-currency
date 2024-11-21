@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:simple_currency/domain/constants/constants.dart';
+import 'package:simple_currency/config/application.dart';
 
 class Toolbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -34,6 +33,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             // Handle settings action
             print('Settings pressed');
+            Application.router.navigateTo(context, '/settings');
           },
         ),
       ],

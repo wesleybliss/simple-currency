@@ -9,6 +9,8 @@ class Routes {
   static final log = Logger('Routes');
   
   static const String home = '/';
+  static const String settings = '/settings';
+  static const String currencies = '/currencies';
 
   static Function defineDefault(FluroRouter router) =>
           (String routePath, Handler handler, [TransitionType transitionType = defaultTransition]) {
@@ -27,6 +29,8 @@ class Routes {
     });
 
     define(home, homeHandler, TransitionType.fadeIn);
+    define(settings, settingsHandler, TransitionType.fadeIn);
+    define(currencies, currenciesHandler, TransitionType.fadeIn);
   }
 
 }
