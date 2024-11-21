@@ -9,6 +9,7 @@ import 'package:simple_currency/ui/widgets/toolbar.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+  
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
