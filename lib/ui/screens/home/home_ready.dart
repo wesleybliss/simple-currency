@@ -40,6 +40,8 @@ class HomeReady extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (state.error != null)
+            Text(state.error!),
           const Center(
             child: Text('You don\'t have any currencies selected yet. \nAdd some by clicking the button below.')
           ),
@@ -57,7 +59,6 @@ class HomeReady extends ConsumerWidget {
     }
     
     return Column(children: [
-      Text('todo - ${selectedCurrencies.length} selected'),
       Row(children: [
           ElevatedButton(
           onPressed: onFetchCurrenciesClick,

@@ -132,13 +132,10 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
   Widget build(BuildContext context) {
     return ReorderableListView(
       onReorder: onReorderCurrency,
-      children: [
-        for (int i = 0; i < sortedCurrencies.length; i++)
-          ListTile(
-            key: ValueKey(sortedCurrencies[i].id),
-            title: buildItem(sortedCurrencies[i], _controllers[sortedCurrencies[i].symbol]),
-          ),
-      ],
+      children: sortedCurrencies.map((e) => ListTile(
+        key: ValueKey(e.symbol),
+        title: buildItem(e, _controllers[e.symbol]),
+      )).toList(),
     );
     
     /*return ListView.builder(

@@ -18,7 +18,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
-      actions: <Widget>[
+      actions: [
         IconButton(
           icon: const Icon(Icons.favorite), // Heart icon for favorites
           tooltip: 'Favorites',

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/domain/di/spot.dart';
 import 'package:simple_currency/domain/io/repos/i_currencies_repo.dart';
@@ -42,7 +43,8 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     
     state = CurrenciesState(currencies: items, loading: false);
     
-    log.d('readCurrencies:\n${items.map((e) => '${e.symbol}: (${e.selected})').join('\n')}');
+    // log.d('readCurrencies:\n${items.map((e) => '${e.symbol}: (${e.selected})').join('\n')}');
+    log.d('readCurrencies: ${items.length}');
     
   }
 
@@ -56,9 +58,27 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     
     try {
       final CurrencyResponse? res = await currenciesRepo.fetchCurrencies();
-      await currencyBox.putManyAsync(res?.data.currencies ?? []);
+      // await currencyBox.putManyAsync(res?.data.currencies ?? []);
       
-      state = CurrenciesState(currencies: res?.data.currencies ?? [], loading: false);
+      final data = res?.data.currencies ?? [];
+      final prev = await currencyBox.getAllAsync();
+      
+      // Update currencies without destroying locally saved data, like selected state
+      store.runInTransaction(TxMode.write, () {
+        for (var i = 0; i < data.length; i++) {
+          final it = data[i];
+          final existing = prev.firstWhereOrNull((e) => e.symbol == it.symbol);
+          
+          if (existing != null) {
+            // log.d('DEBUG: Updating currency: ${it.symbol} (selected: ${existing.selected})');
+            data[i] = it.copyWith(selected: existing.selected);
+          }
+          
+          currencyBox.put(it);
+        }
+      });
+      
+      state = CurrenciesState(currencies: data, loading: false);
     } catch (e) {
       log.e('CurrenciesNotifier error', e);
       state = CurrenciesState(loading: false, error: e.toString());
