@@ -1,24 +1,41 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/sorted_currencies_provider.dart';
 import 'package:simple_currency/domain/models/currency.dart';
+import 'package:simple_currency/utils/currency_utils.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
   final log = Logger('CurrencyValuesNotifier');
+  final Ref ref;
 
-  CurrencyValuesNotifier({required List<Currency> initialCurrencies})
+  CurrencyValuesNotifier(List<Currency> initialCurrencies, this.ref)
       : super(
           // Initialize with the selected currencies and default values (e.g., 0.0)
           {for (var currency in initialCurrencies) currency.symbol: 0.0},
         );
 
   // Update the value for a specific currency
-  void updateValue(String symbol, double value) {
-    log.d('Updating currency value: $symbol = $value');
-    state = {
-      ...state,
-      symbol: value, // Update the specific currency
-    };
+  Map<String, double> setValue(String symbol, String text) {
+
+    final double value = double.tryParse(text) ?? 0.0;
+    final sortedCurrencies = ref.read(sortedCurrenciesProvider);
+    
+    // Get the updated currency values
+    state = convertCurrencies(symbol, value, sortedCurrencies);
+    
+    return state;
+    
+  }
+  
+  // Update the value for a specific currency
+  // Uses a callback to allow the caller to read the existing value before returning the updated one
+  double updateValue(String symbol, double Function(double prev) callback) {
+    final prev = state[symbol] ?? 0.0;
+    final next = callback(prev);
+    
+    setValue(symbol, next.toString());
+    return next;
   }
 }
 
@@ -28,6 +45,6 @@ final currencyValuesProvider = StateNotifierProvider<CurrencyValuesNotifier, Map
     final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
 
     // Create the notifier with the initial values
-    return CurrencyValuesNotifier(initialCurrencies: selectedCurrencies);
+    return CurrencyValuesNotifier(selectedCurrencies, ref);
   },
 );

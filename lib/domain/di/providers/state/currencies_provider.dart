@@ -121,4 +121,18 @@ final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
   return currenciesState.currencies.where((currency) => currency.selected).toList();
 });
 
-// final currencyInputValuesProvider = Provider
+
+
+class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void setSymbol(String value) {
+    state = value;
+  }
+}
+
+// Provider to track the currently selected input's currency symbol
+final focusedCurrencyInputSymbolProvider =
+  NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(
+      FocusedCurrencyInputSymbolNotifier.new);

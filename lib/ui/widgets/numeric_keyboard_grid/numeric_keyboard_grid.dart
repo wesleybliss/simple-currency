@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
 import 'package:simple_currency/ui/widgets/numeric_keyboard_grid/numeric_keyboard_grid_button.dart';
 
-class NumericKeyboardGrid extends StatefulWidget {
+class NumericKeyboardGrid extends ConsumerStatefulWidget {
   const NumericKeyboardGrid({super.key});
 
   @override
-  State<NumericKeyboardGrid> createState() => _NumericKeyboardGridState();
+  ConsumerState<NumericKeyboardGrid> createState() => _NumericKeyboardGridState();
 }
 
-class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
+class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
   String input = '';
-
-  void _updateInput(String value) {
-    setState(() {
-      input += value; // Update the input string
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     int buttonLabelIndex = 1;
+    final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
     
     // Get the bottom padding to account for safe area
     final bottomPadding = MediaQuery
@@ -30,6 +28,21 @@ class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
     int nextButtonIndex() {
       if (buttonLabelIndex == 10) buttonLabelIndex = 0;
       return buttonLabelIndex++;
+    }
+
+    void updateInput(String value) {
+      setState(() {
+        input += value; // Update the input string
+      });
+
+      final next = double.tryParse(input) ?? 0.0;
+      
+      ref.read(currencyValuesProvider.notifier)
+          .setValue(input, input);
+
+      /*if (focusedCurrencyInputSymbol != null) {
+        ref.read(currencyValuesProvider.notifier).updateValue(focusedCurrencyInputSymbol, (prev) => '${prev}${next}');
+      }*/
     }
     
     void onAddPressed() {
@@ -130,7 +143,7 @@ class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
                 return NumericKeyboardGridButton(
                   label: '$buttonIndex',
                   onPressed: () {
-                    _updateInput(buttonIndex.toString());
+                    updateInput(buttonIndex.toString());
                   },
                 );
               }

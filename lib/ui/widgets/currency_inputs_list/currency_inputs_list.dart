@@ -3,50 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/sorted_currencies_provider.dart';
-import 'package:simple_currency/domain/extensions/extensions.dart';
 import 'package:simple_currency/domain/models/currency.dart';
+import 'package:simple_currency/ui/widgets/currency_inputs_list/currency_inputs_list_row.dart';
 import 'package:simple_currency/utils/currency_utils.dart';
 import 'package:simple_currency/utils/logger.dart';
 
-import 'currency_text_field.dart';
-
 class CurrenciesInputsList extends ConsumerStatefulWidget {
-  
   final List<Currency> currencies;
-  
+
   const CurrenciesInputsList({super.key, required this.currencies});
 
   @override
   ConsumerState<CurrenciesInputsList> createState() => _CurrenciesInputsListState();
-  
 }
 
 class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
-  
   final log = Logger('CurrenciesInputsList');
   final Map<String, TextEditingController> _controllers = {};
-  // List<Currency> sortedCurrencies = [];
-
-  // Track the focused input so we can clear them all when it changes
-  String? _focusedSymbol;
-
-  @override
-  void initState() {
-    super.initState();
-
-    /*// Sort first by order, then alphabetically by symbol
-    sortedCurrencies = List<Currency>.from(widget.currencies);
-    sortedCurrencies.sort((a, b) {
-      final orderComparison = a.order.compareTo(b.order);
-      if (orderComparison != 0) return orderComparison;
-      return a.symbol.compareTo(b.symbol);
-    });
-
-    // Initialize controllers for each currency
-    for (var currency in sortedCurrencies) {
-      _controllers[currency.symbol] = TextEditingController();
-    }*/
-  }
 
   @override
   void dispose() {
@@ -55,7 +28,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     }
     super.dispose();
   }
-  
+
   /// Clear all controllers when the focused input changes
   void clearAllInputs() {
     // Clear all controllers when the focused input changes
@@ -64,53 +37,45 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     }
   }
 
-  void _onFocusChanged(String symbol) {
-    if (_focusedSymbol == symbol) return;
-    
-    clearAllInputs();
-    _focusedSymbol = symbol;
-  }
-
-  Widget buildItem(Currency item, TextEditingController? controller, onTextChanged) {
-    return Row(children: [
-          Expanded(
-              child: Focus(
-                onFocusChange: (hasFocus) {
-                  if (hasFocus) {
-                    _onFocusChanged(item.symbol);
-                  }
-                },
-                child: CurrencyTextField(item: item, controller: controller, onTextChanged: onTextChanged),
-              )),
-          IconButton(
-            icon: const Icon(Icons.content_copy),
-            onPressed: () {
-              context.copyToClipboard(controller?.text ?? '');
-            },
-          ),
-        ]);
-  }
-  
-  /*Widget itemBuilder(BuildContext context, int index) {
-    final item = sortedCurrencies[index];
-    final controller = _controllers[item.symbol];
-    final currencyValues = ref.watch(currencyValuesProvider);
-
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-    child: buildItem(item, controller));
-  }*/
-
   @override
   Widget build(BuildContext context) {
-    
-    // Watch sorted currencies
     final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
+    final currencyValues = ref.watch(currencyValuesProvider);
+    
+    // Track the focused input so we can clear them all when it changes
+    final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
 
-    // Initialize controllers lazily
     for (var currency in sortedCurrencies) {
       _controllers.putIfAbsent(currency.symbol, () => TextEditingController());
     }
+
+    void onFocusChanged(String symbol) {
+      if (focusedCurrencyInputSymbol == symbol) return;
+
+      clearAllInputs();
+      ref.read(focusedCurrencyInputSymbolProvider.notifier).setSymbol(symbol);
+    }
+
+    void updateControllers(Map<String, double> currencyValues) {
+      for (var entry in currencyValues.entries) {
+        final symbol = entry.key;
+        final value = entry.value;
+
+        if (_controllers.containsKey(symbol) && focusedCurrencyInputSymbol != symbol) {
+          final controller = _controllers[symbol]!;
+          final valueAsString = value.toStringAsFixed(2);
+
+          // Update controller only if the value has changed
+          if (controller.text != valueAsString) {
+            controller.text = valueAsString;
+          }
+        }
+      }
+    }
+    
+    // Update the controllers with the latest currency values
+    updateControllers(currencyValues);
+    
 
     void onTextChanged(String symbol, String text) {
       // If the text is empty, clear all controllers
@@ -118,8 +83,8 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
         clearAllInputs();
         return;
       }
-
-      // Convert the input text to a double
+      
+      /*// Convert the input text to a double
       final double inputValue = double.tryParse(text) ?? 0.0;
 
       // Get the updated currency values
@@ -129,7 +94,16 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
       updatedValues.forEach((key, value) {
         _controllers[key]?.text = value.toStringAsFixed(2);
         // Update the currency values provider
-        ref.read(currencyValuesProvider.notifier).updateValue(symbol, value);
+        ref.read(currencyValuesProvider.notifier).setValue(symbol, value);
+      });*/
+
+      
+      //
+      
+      final updatedValues = ref.read(currencyValuesProvider.notifier).setValue(symbol, text);
+
+      updatedValues.forEach((key, value) {
+        _controllers[key]?.text = value.toStringAsFixed(2);
       });
     }
 
@@ -146,14 +120,15 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
         }
       });
     }
-    
+
     return ReorderableListView(
       onReorder: onReorderCurrency,
-      children: sortedCurrencies.map((e) => ListTile(
-        key: ValueKey(e.symbol),
-        title: buildItem(e, _controllers[e.symbol], onTextChanged),
-      )).toList(),
+      children: sortedCurrencies
+          .map((e) => ListTile(
+                key: ValueKey(e.symbol),
+                title: CurrencyInputsListRow(item: e, controller: _controllers[e.symbol], onFocusChanged: onFocusChanged, onTextChanged: onTextChanged),
+              ))
+          .toList(),
     );
-    
   }
 }

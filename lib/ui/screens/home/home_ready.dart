@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/store/SimpleCurrencyStore.dart';
 import 'package:simple_currency/ui/widgets/currencies_list.dart';
@@ -18,6 +19,10 @@ class HomeReady extends ConsumerWidget {
     final log = Logger('HomeReady');
     final state = ref.watch(currenciesProvider);
     final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
+    
+    // @debug
+    final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
+    final Map<String, double> currencyValues = ref.watch(currencyValuesProvider);
 
     log.d('HomeReady: ${state.currencies.length} total');
     log.d('HomeReady: ${selectedCurrencies.length} selected');
@@ -42,6 +47,8 @@ class HomeReady extends ConsumerWidget {
     }
     
     return Column(children: [
+      Text('focused: $focusedCurrencyInputSymbol'),
+      Text(currencyValues.entries.map((e) => '${e.key}: ${e.value}').join('\n')),
       Expanded(
         child: CurrenciesInputsList(currencies: selectedCurrencies),
       ),
