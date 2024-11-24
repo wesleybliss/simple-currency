@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/sorted_currencies_provider.dart';
 import 'package:simple_currency/domain/extensions/extensions.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/utils/currency_utils.dart';
@@ -9,18 +11,21 @@ import 'package:simple_currency/utils/logger.dart';
 import 'currency_text_field.dart';
 
 class CurrenciesInputsList extends ConsumerStatefulWidget {
+  
   final List<Currency> currencies;
   
   const CurrenciesInputsList({super.key, required this.currencies});
 
   @override
   ConsumerState<CurrenciesInputsList> createState() => _CurrenciesInputsListState();
+  
 }
 
 class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
+  
   final log = Logger('CurrenciesInputsList');
   final Map<String, TextEditingController> _controllers = {};
-  List<Currency> sortedCurrencies = [];
+  // List<Currency> sortedCurrencies = [];
 
   // Track the focused input so we can clear them all when it changes
   String? _focusedSymbol;
@@ -29,7 +34,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
   void initState() {
     super.initState();
 
-    // Sort first by order, then alphabetically by symbol
+    /*// Sort first by order, then alphabetically by symbol
     sortedCurrencies = List<Currency>.from(widget.currencies);
     sortedCurrencies.sort((a, b) {
       final orderComparison = a.order.compareTo(b.order);
@@ -40,7 +45,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     // Initialize controllers for each currency
     for (var currency in sortedCurrencies) {
       _controllers[currency.symbol] = TextEditingController();
-    }
+    }*/
   }
 
   @override
@@ -66,40 +71,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     _focusedSymbol = symbol;
   }
 
-  void _onTextChanged(String symbol, String text) {
-    // If the text is empty, clear all controllers
-    if (text.isEmpty) {
-      clearAllInputs();
-      return;
-    }
-
-    // Convert the input text to a double
-    final double inputValue = double.tryParse(text) ?? 0.0;
-
-    // Get the updated currency values
-    final Map<String, double> updatedValues = convertCurrencies(symbol, inputValue, sortedCurrencies);
-
-    // Update the controllers with the new values
-    updatedValues.forEach((key, value) {
-      _controllers[key]?.text = value.toStringAsFixed(2);
-    });
-  }
-  
-  void onReorderCurrency(int oldIndex, int newIndex) {
-    setState(() {
-      if (newIndex > oldIndex) newIndex -= 1; // Adjust for removal
-      final item = sortedCurrencies.removeAt(oldIndex);
-      sortedCurrencies.insert(newIndex, item);
-
-      // Update the order property and save to ObjectBox
-      for (int i = 0; i < sortedCurrencies.length; i++) {
-        sortedCurrencies[i].order = i;
-        ref.read(currenciesProvider.notifier).setCurrency(sortedCurrencies[i]);
-      }
-    });
-  }
-  
-  Widget buildItem(Currency item, TextEditingController? controller) {
+  Widget buildItem(Currency item, TextEditingController? controller, onTextChanged) {
     return Row(children: [
           Expanded(
               child: Focus(
@@ -108,7 +80,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
                     _onFocusChanged(item.symbol);
                   }
                 },
-                child: CurrencyTextField(item: item, controller: controller, onTextChanged: _onTextChanged),
+                child: CurrencyTextField(item: item, controller: controller, onTextChanged: onTextChanged),
               )),
           IconButton(
             icon: const Icon(Icons.content_copy),
@@ -119,28 +91,69 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
         ]);
   }
   
-  Widget itemBuilder(BuildContext context, int index) {
+  /*Widget itemBuilder(BuildContext context, int index) {
     final item = sortedCurrencies[index];
     final controller = _controllers[item.symbol];
+    final currencyValues = ref.watch(currencyValuesProvider);
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     child: buildItem(item, controller));
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    
+    // Watch sorted currencies
+    final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
+
+    // Initialize controllers lazily
+    for (var currency in sortedCurrencies) {
+      _controllers.putIfAbsent(currency.symbol, () => TextEditingController());
+    }
+
+    void onTextChanged(String symbol, String text) {
+      // If the text is empty, clear all controllers
+      if (text.isEmpty) {
+        clearAllInputs();
+        return;
+      }
+
+      // Convert the input text to a double
+      final double inputValue = double.tryParse(text) ?? 0.0;
+
+      // Get the updated currency values
+      final Map<String, double> updatedValues = convertCurrencies(symbol, inputValue, sortedCurrencies);
+
+      // Update the controllers with the new values
+      updatedValues.forEach((key, value) {
+        _controllers[key]?.text = value.toStringAsFixed(2);
+        // Update the currency values provider
+        ref.read(currencyValuesProvider.notifier).updateValue(symbol, value);
+      });
+    }
+
+    void onReorderCurrency(int oldIndex, int newIndex) {
+      setState(() {
+        if (newIndex > oldIndex) newIndex -= 1; // Adjust for removal
+        final item = sortedCurrencies.removeAt(oldIndex);
+        sortedCurrencies.insert(newIndex, item);
+
+        // Update the order property and save to ObjectBox
+        for (int i = 0; i < sortedCurrencies.length; i++) {
+          sortedCurrencies[i].order = i;
+          ref.read(currenciesProvider.notifier).setCurrency(sortedCurrencies[i]);
+        }
+      });
+    }
+    
     return ReorderableListView(
       onReorder: onReorderCurrency,
       children: sortedCurrencies.map((e) => ListTile(
         key: ValueKey(e.symbol),
-        title: buildItem(e, _controllers[e.symbol]),
+        title: buildItem(e, _controllers[e.symbol], onTextChanged),
       )).toList(),
     );
     
-    /*return ListView.builder(
-      itemCount: sortedCurrencies.length ?? 0,
-      itemBuilder: itemBuilder,
-    );*/
   }
 }

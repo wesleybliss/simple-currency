@@ -120,3 +120,5 @@ final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
   // Derive the selected currencies
   return currenciesState.currencies.where((currency) => currency.selected).toList();
 });
+
+// final currencyInputValuesProvider = Provider

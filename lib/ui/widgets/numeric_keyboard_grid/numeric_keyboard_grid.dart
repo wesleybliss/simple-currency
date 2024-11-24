@@ -17,66 +17,6 @@ class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
     });
   }
 
-  void _clearInput() {
-    setState(() {
-      input = ''; // Clear the input string
-    });
-  }
-
-  void _backspace() {
-    setState(() {
-      if (input.isNotEmpty) {
-        input = input.substring(0, input.length - 1); // Remove last character
-      }
-    });
-  }
-
-  // @override
-  Widget build1(BuildContext context) {
-    // Get the bottom padding to account for safe area
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-    
-    return Container(
-        padding: const EdgeInsets.all(10),
-    height: 200, // Set a fixed height for the grid
-    child: GridView.builder(
-        padding: const EdgeInsets.all(10),
-      physics: NeverScrollableScrollPhysics(), // Prevent scrolling
-      shrinkWrap: true, // Allow it to take only the space it needs
-        itemCount: 12, // Total buttons (0-9 + Clear + Backspace)
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, // Three buttons per row
-          childAspectRatio: 1, // Square buttons
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemBuilder: (context, index) {
-          if (index < 9) {
-            return NumericKeyboardGridButton(
-              label: (index + 1).toString(),
-              onPressed: () => _updateInput((index + 1).toString()),
-            );
-          } else if (index == 9) {
-            return NumericKeyboardGridButton(
-              label: '0',
-              onPressed: () => _updateInput('0'),
-            );
-          } else if (index == 10) {
-            return NumericKeyboardGridButton(
-              label: 'C',
-              onPressed: _clearInput,
-            );
-          } else {
-            // index == 11
-            return NumericKeyboardGridButton(
-              label: '<',
-              onPressed: _backspace,
-            );
-          }
-        },
-      ));
-  }
-
   @override
   Widget build(BuildContext context) {
     int buttonLabelIndex = 1;
@@ -87,7 +27,7 @@ class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
         .padding
         .bottom;
     
-    int nextButtonLabel() {
+    int nextButtonIndex() {
       if (buttonLabelIndex == 10) buttonLabelIndex = 0;
       return buttonLabelIndex++;
     }
@@ -113,7 +53,18 @@ class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
     }
     
     void onBackspacePressed() {
-      
+      setState(() {
+        if (input.isNotEmpty) {
+          // Remove last character
+          input = input.substring(0, input.length - 1);
+        }
+      });
+    }
+    
+    void onBackspaceLongPressed() {
+      setState(() {
+        input = ''; // Clear the input string
+      });
     }
     
     return Container(
@@ -167,6 +118,7 @@ class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
                 return NumericKeyboardGridButton(
                   label: '/',
                   onPressed: onBackspacePressed,
+                  onLongPress: onBackspaceLongPressed,
                 );
               } else if (index == 15) {
                 return NumericKeyboardGridButton(
@@ -174,9 +126,12 @@ class _NumericKeyboardGridState extends State<NumericKeyboardGrid> {
                   onPressed: onDividePressed,
                 );
               } else {
+                final buttonIndex = nextButtonIndex();
                 return NumericKeyboardGridButton(
-                  label: '${nextButtonLabel()}',
-                  onPressed: () {},
+                  label: '$buttonIndex',
+                  onPressed: () {
+                    _updateInput(buttonIndex.toString());
+                  },
                 );
               }
             },
