@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
 import 'package:simple_currency/ui/widgets/numeric_keyboard_grid/numeric_keyboard_grid_button.dart';
+import 'package:simple_currency/utils/logger.dart';
+import 'package:simple_currency/utils/utils.dart';
 
 class NumericKeyboardGrid extends ConsumerStatefulWidget {
   const NumericKeyboardGrid({super.key});
@@ -12,8 +14,8 @@ class NumericKeyboardGrid extends ConsumerStatefulWidget {
 }
 
 class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
-  String input = '';
-
+  final log = Logger('NumericKeyboardGrid');
+  
   @override
   Widget build(BuildContext context) {
     int buttonLabelIndex = 1;
@@ -31,18 +33,13 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
     }
 
     void updateInput(String value) {
-      setState(() {
-        input += value; // Update the input string
+      if (focusedCurrencyInputSymbol == null) return;
+      ref.read(currencyValuesProvider.notifier).updateValue(focusedCurrencyInputSymbol, (prev) {
+        // final next = prev + value;
+        final next = Utils.updateDecimalWholeNumber(prev, value);
+        // log.d('updateInput: $prev -> $next');
+        return next;
       });
-
-      final next = double.tryParse(input) ?? 0.0;
-      
-      ref.read(currencyValuesProvider.notifier)
-          .setValue(input, input);
-
-      /*if (focusedCurrencyInputSymbol != null) {
-        ref.read(currencyValuesProvider.notifier).updateValue(focusedCurrencyInputSymbol, (prev) => '${prev}${next}');
-      }*/
     }
     
     void onAddPressed() {
@@ -66,18 +63,14 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
     }
     
     void onBackspacePressed() {
-      setState(() {
-        if (input.isNotEmpty) {
-          // Remove last character
-          input = input.substring(0, input.length - 1);
-        }
-      });
+      if (focusedCurrencyInputSymbol == null) return;
+      ref.read(currencyValuesProvider.notifier).updateValue(
+          focusedCurrencyInputSymbol, (prev) => prev.substring(0, prev.length - 1));
     }
     
     void onBackspaceLongPressed() {
-      setState(() {
-        input = ''; // Clear the input string
-      });
+      if (focusedCurrencyInputSymbol == null) return;
+      ref.read(currencyValuesProvider.notifier).setValue(focusedCurrencyInputSymbol, '');
     }
     
     return Container(

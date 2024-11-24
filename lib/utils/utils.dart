@@ -119,4 +119,18 @@ abstract class Utils {
   static String encodeStringToBase64UrlSafeString(final String url) => _base64SafeEncoder.encode(utf8.encode(url));
 
   static String decodeFromBase64UrlSafeEncodedString(String str) => utf8.decode(_base64SafeEncoder.decode(str));
+  
+  // Updates a stringified decimal, adding the new value to the whole number part
+  static String updateDecimalWholeNumber(String value, String newValue) {
+    // Split the original value into whole number and decimal parts
+    final parts = value.split('.');
+    final int wholeNumber = int.tryParse(parts[0]) ?? 0; // Whole number part
+    final String decimalPart = parts.length > 1 ? parts[1] : ''; // Decimal part
+
+    // Parse the new whole number from newValue
+    final int newWholeNumber = int.tryParse(newValue) ?? 0;
+
+    // Combine the updated whole number with the existing decimal part
+    return wholeNumber.toString() + newWholeNumber.toString() + (decimalPart.isNotEmpty ? '.$decimalPart' : '');
+  }
 }

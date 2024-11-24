@@ -31,10 +31,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
 
   /// Clear all controllers when the focused input changes
   void clearAllInputs() {
-    // Clear all controllers when the focused input changes
-    for (var controller in _controllers.values) {
-      controller.clear();
-    }
+    ref.read(currencyValuesProvider.notifier).clearValues();
   }
 
   @override
@@ -50,6 +47,8 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     }
 
     void onFocusChanged(String symbol) {
+      _controllers[symbol]?.clear();
+
       if (focusedCurrencyInputSymbol == symbol) return;
 
       clearAllInputs();
@@ -57,25 +56,29 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     }
 
     void updateControllers(Map<String, double> currencyValues) {
+      log.d('updateControllers');
+      
       for (var entry in currencyValues.entries) {
         final symbol = entry.key;
         final value = entry.value;
 
-        if (_controllers.containsKey(symbol) && focusedCurrencyInputSymbol != symbol) {
+        if (_controllers.containsKey(symbol)) {
           final controller = _controllers[symbol]!;
-          final valueAsString = value.toStringAsFixed(2);
+          final valueAsString = value.toString();
 
+          log.d('updateControllers $symbol => ${controller.text} -> $valueAsString');
           // Update controller only if the value has changed
           if (controller.text != valueAsString) {
             controller.text = valueAsString;
           }
+        } else {
+          log.e('Currency not found: $symbol in ${_controllers.keys}');
         }
       }
     }
     
     // Update the controllers with the latest currency values
     updateControllers(currencyValues);
-    
 
     void onTextChanged(String symbol, String text) {
       // If the text is empty, clear all controllers
@@ -84,26 +87,10 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
         return;
       }
       
-      /*// Convert the input text to a double
-      final double inputValue = double.tryParse(text) ?? 0.0;
-
-      // Get the updated currency values
-      final Map<String, double> updatedValues = convertCurrencies(symbol, inputValue, sortedCurrencies);
-
-      // Update the controllers with the new values
-      updatedValues.forEach((key, value) {
-        _controllers[key]?.text = value.toStringAsFixed(2);
-        // Update the currency values provider
-        ref.read(currencyValuesProvider.notifier).setValue(symbol, value);
-      });*/
-
-      
-      //
-      
       final updatedValues = ref.read(currencyValuesProvider.notifier).setValue(symbol, text);
 
       updatedValues.forEach((key, value) {
-        _controllers[key]?.text = value.toStringAsFixed(2);
+        _controllers[key]?.text = value.toString();
       });
     }
 

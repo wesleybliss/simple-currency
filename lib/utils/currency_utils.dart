@@ -12,8 +12,11 @@ Map<String, double> convertCurrencies(String symbol, double inputValue, List<Cur
 
   // Create a map of symbol to converted value
   final Map<String, double> updatedValues = {};
+  
   for (var currency in currencies) {
-    if (currency.symbol != symbol) {
+    if (currency.symbol == symbol) {
+      updatedValues[currency.symbol] = inputValue;
+    } else {
       final double convertedValue = valueInUSD * currency.rate;
       updatedValues[currency.symbol] = convertedValue;
     }
