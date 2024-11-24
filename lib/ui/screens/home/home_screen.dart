@@ -6,6 +6,7 @@ import 'package:simple_currency/ui/screens/home/home_error.dart';
 import 'package:simple_currency/ui/screens/home/home_loading.dart';
 import 'package:simple_currency/ui/screens/home/home_ready.dart';
 import 'package:simple_currency/ui/widgets/toolbar.dart';
+import 'package:simple_currency/utils/utils.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -18,8 +19,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Trigger the fetchCurrencies method when the screen loads
-    ref.read(currenciesProvider.notifier).fetchCurrencies();
+    
+    Utils.nextTick(() {
+      // Read local currencies & refresh if needed
+      ref.read(currenciesProvider.notifier).initializeCurrencies();
+    });
   }
 
   @override

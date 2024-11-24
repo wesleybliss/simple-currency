@@ -57,7 +57,8 @@ dependencies:
   crypto: ^3.0.6
   
   # Key/value storage for basic app persistence
-  shared_preferences: ^2.1.1
+  shared_preferences: ^2.3.3
+  shared_preferences_riverpod: ^0.3.0
   
   # Offline database storage
   objectbox: ^4.0.3

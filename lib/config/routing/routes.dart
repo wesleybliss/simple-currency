@@ -8,6 +8,8 @@ import 'package:simple_currency/utils/logger.dart';
 class Routes {
   static final log = Logger('Routes');
   
+  static const String debug = '/debug';
+  
   static const String home = '/';
   static const String settings = '/settings';
   static const String currencies = '/currencies';
@@ -28,6 +30,8 @@ class Routes {
       return errorHandler.handlerFunc(context, params);
     });
 
+    define(debug, debugHandler, TransitionType.fadeIn);
+    
     define(home, homeHandler, TransitionType.fadeIn);
     define(settings, settingsHandler, TransitionType.fadeIn);
     define(currencies, currenciesHandler, TransitionType.fadeIn);

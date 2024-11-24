@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_currency/domain/constants/constants.dart';
 import 'package:simple_currency/domain/di/spot.dart';
 import 'package:simple_currency/domain/di/spot_module.dart';
@@ -19,7 +20,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 class Application {
   static bool isInitialized = false;
   static late final FluroRouter router;
-  // static late final StreamingSharedPreferences prefs;
+  static late final SharedPreferences prefs;
 
   static Future<void> initialize() async {
     // Force portrait mode
@@ -36,9 +37,9 @@ class Application {
     //
     // Note: intentionally not setting `isInitialized` true here,
     // so the splash screen can continue loading the rest of the dependencies
-    /*if (!isInitialized) {
-      prefs = await StreamingSharedPreferences.instance;
-    }*/
+    if (!isInitialized) {
+      prefs = await SharedPreferences.getInstance();
+    }
     // await Settings.initialize();
 
     // Let image caching be more verbose (useful when debugging network images)

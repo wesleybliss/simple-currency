@@ -15,7 +15,7 @@ class HomeError extends ConsumerWidget {
 
     return Center(
         child: Column(children: [
-      Text('Error: ${state.error}'),
+      Padding(padding: const EdgeInsets.only(left: 16, right: 16), child: Text('Error: ${state.error}')),
       ElevatedButton(
         onPressed: onFetchCurrenciesClick,
         child: const Text('Fetch Currencies'),

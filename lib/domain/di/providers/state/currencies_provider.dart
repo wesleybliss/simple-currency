@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_currency/domain/constants/constants.dart';
 import 'package:simple_currency/domain/di/spot.dart';
 import 'package:simple_currency/domain/io/repos/i_currencies_repo.dart';
 import 'package:simple_currency/domain/models/currency.dart';
@@ -33,7 +35,8 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     currencyBox.put(currency);
   }
   
-  Future<void> readCurrencies({ bool showLoading = true }) async {
+  Future<List<Currency>> readCurrencies({ bool showLoading = true }) async {
+    
     if (showLoading) {
       state = CurrenciesState(loading: true);
     }
@@ -45,6 +48,8 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     
     // log.d('readCurrencies:\n${items.map((e) => '${e.symbol}: (${e.selected})').join('\n')}');
     log.d('readCurrencies: ${items.length}');
+    
+    return items;
     
   }
 
@@ -58,7 +63,6 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     
     try {
       final CurrencyResponse? res = await currenciesRepo.fetchCurrencies();
-      // await currencyBox.putManyAsync(res?.data.currencies ?? []);
       
       final data = res?.data.currencies ?? [];
       final prev = await currencyBox.getAllAsync();
@@ -83,6 +87,24 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       log.e('CurrenciesNotifier error', e);
       state = CurrenciesState(loading: false, error: e.toString());
     }
+  }
+  
+  Future<void> initializeCurrencies() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    final lastUpdatedValue = prefs.getString(Constants.keys.settings.lastUpdated);
+    final lastUpdated = lastUpdatedValue != null ? DateTime.parse(lastUpdatedValue) : null;
+    final shouldUpdate = lastUpdated == null || DateTime.now().difference(lastUpdated).inHours > 6;
+    final savedCurrencies = await readCurrencies();
+    
+    // If we haven't fetched in more than 6 hours, fetch again
+    if (savedCurrencies.isEmpty || shouldUpdate) {
+      log.d('Initializing currencies. Either no currencies saved, or more than 6 hours since last update');
+      await fetchCurrencies();
+      
+      prefs.setString(Constants.keys.settings.lastUpdated, DateTime.now().toIso8601String());
+    }
+    
   }
   
 }

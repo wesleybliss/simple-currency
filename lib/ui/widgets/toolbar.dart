@@ -20,11 +20,17 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title),
       actions: [
         IconButton(
+          icon: const Icon(Icons.bug_report), // Heart icon for favorites
+          tooltip: 'Debug',
+          onPressed: () {
+            Application.router.navigateTo(context, '/debug');
+          },
+        ),
+        IconButton(
           icon: const Icon(Icons.favorite), // Heart icon for favorites
           tooltip: 'Favorites',
           onPressed: () {
-            // Handle favorites action
-            print('Favorites pressed');
+            Application.router.navigateTo(context, '/currencies');
           },
         ),
         IconButton(
