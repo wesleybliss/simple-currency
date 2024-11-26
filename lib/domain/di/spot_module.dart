@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
 import 'package:simple_currency/domain/di/spot.dart';
+import 'package:simple_currency/domain/io/i_settings.dart';
 import 'package:simple_currency/domain/io/net/dio_client.dart';
 import 'package:simple_currency/domain/io/net/i_dio_client.dart';
 import 'package:simple_currency/domain/io/repos/currencies_repo.dart';
@@ -10,8 +12,8 @@ abstract class SpotModule {
     Spot.init((factory, single) {
       
       // Globals
-      // single<ISettings, Settings>((get) => Settings());
-
+      single<ISettings, Settings>((get) => Settings());
+      
       // Networking
       single<Dio, Dio>((get) => Dio());
       single<IDioClient, IDioClient>((get) => DioClient());

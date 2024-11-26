@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_currency/domain/models/currency.dart';
-import 'package:simple_currency/utils/currency_input_formatter.dart';
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    // Allow only digits and one decimal point
+    if (newValue.text.isEmpty) {
+      return newValue; // Allow empty input
+    }
+
+    // Regular expression to match valid decimal numbers
+    final RegExp regex = RegExp(r'^\d*\.?\d*$');
+
+    if (regex.hasMatch(newValue.text)) {
+      return newValue; // If valid, return the new value
+    }
+
+    return oldValue; // If invalid, return the old value
+  }
+}
 
 class CurrencyTextField extends StatelessWidget {
   final Currency item;
@@ -46,7 +65,8 @@ class CurrencyTextField extends StatelessWidget {
       textAlign: TextAlign.end,
       keyboardType: TextInputType.number,
       inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
+        // FilteringTextInputFormatter.digitsOnly,
+        DecimalTextInputFormatter(),
         // CurrencyInputFormatter(item.symbol),
       ],
       onChanged: (text) {

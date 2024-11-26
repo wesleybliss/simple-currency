@@ -7,6 +7,7 @@ import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/ui/widgets/currency_inputs_list/currency_inputs_list_row.dart';
 import 'package:simple_currency/utils/currency_utils.dart';
 import 'package:simple_currency/utils/logger.dart';
+import 'package:simple_currency/utils/utils.dart';
 
 class CurrenciesInputsList extends ConsumerStatefulWidget {
   final List<Currency> currencies;
@@ -61,6 +62,9 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
       for (var entry in currencyValues.entries) {
         final symbol = entry.key;
         final value = entry.value;
+        
+        // Don't update the input field they've typed in
+        if (focusedCurrencyInputSymbol == symbol) return;
 
         if (_controllers.containsKey(symbol)) {
           final controller = _controllers[symbol]!;
@@ -89,9 +93,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
       
       final updatedValues = ref.read(currencyValuesProvider.notifier).setValue(symbol, text);
 
-      updatedValues.forEach((key, value) {
-        _controllers[key]?.text = value.toString();
-      });
+      updateControllers(updatedValues);
     }
 
     void onReorderCurrency(int oldIndex, int newIndex) {

@@ -34,6 +34,11 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     state = CurrenciesState(currencies: next);
     currencyBox.put(currency);
   }
+
+  Future<void> clearCurrencies() async {
+    await currencyBox.removeAllAsync();
+    state = CurrenciesState(currencies: [], loading: false);
+  }
   
   Future<List<Currency>> readCurrencies({ bool showLoading = true }) async {
     
@@ -51,11 +56,6 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     
     return items;
     
-  }
-
-  Future<void> clearCurrencies() async {
-    await currencyBox.removeAllAsync();
-    state = CurrenciesState(currencies: [], loading: false);
   }
   
   Future<void> fetchCurrencies() async {

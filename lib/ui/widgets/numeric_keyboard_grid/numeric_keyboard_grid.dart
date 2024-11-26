@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/currency_input_mode_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
 import 'package:simple_currency/ui/widgets/numeric_keyboard_grid/numeric_keyboard_grid_button.dart';
 import 'package:simple_currency/utils/logger.dart';
@@ -34,44 +35,32 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
 
     void updateInput(String value) {
       if (focusedCurrencyInputSymbol == null) return;
-      ref.read(currencyValuesProvider.notifier).updateValue(focusedCurrencyInputSymbol, (prev) {
-        // final next = prev + value;
-        final next = Utils.updateDecimalWholeNumber(prev, value);
-        // log.d('updateInput: $prev -> $next');
-        return next;
-      });
+      ref.read(currencyValuesProvider.notifier).setValue(focusedCurrencyInputSymbol, value);
     }
     
-    void onAddPressed() {
-      
-    }
-    
-    void onSubtractPressed() {
-      
-    }
-    
-    void onMultiplyPressed() {
-      
-    }
-    
-    void onDividePressed() {
-      
-    }
-    
-    void onCommaPressed() {
-      
-    }
-    
-    void onBackspacePressed() {
-      if (focusedCurrencyInputSymbol == null) return;
-      ref.read(currencyValuesProvider.notifier).updateValue(
-          focusedCurrencyInputSymbol, (prev) => prev.substring(0, prev.length - 1));
+    void setInputMode(CurrencyInputModes mode) {
+      ref.read(currencyInputModeProvider.notifier).setMode(mode);
     }
     
     void onBackspaceLongPressed() {
       if (focusedCurrencyInputSymbol == null) return;
       ref.read(currencyValuesProvider.notifier).setValue(focusedCurrencyInputSymbol, '');
     }
+    
+    Widget numericButtonFor(String label, VoidCallback onPressed, [VoidCallback? onLongPress]) => NumericKeyboardGridButton(
+      label: label,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+    );
+
+    final indexToButtonMap = {
+      3: numericButtonFor('+', () => setInputMode(CurrencyInputModes.addition)),
+      7: numericButtonFor('-', () => setInputMode(CurrencyInputModes.subtraction)),
+      11: numericButtonFor('*', () => setInputMode(CurrencyInputModes.multiplication)),
+      12: numericButtonFor(',', () => setInputMode(CurrencyInputModes.decimal)),
+      14: numericButtonFor('/', () => setInputMode(CurrencyInputModes.normal)),
+      15: numericButtonFor('/', () => setInputMode(CurrencyInputModes.division), onBackspaceLongPressed),
+    };
     
     return Container(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomPadding),
@@ -100,37 +89,8 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
             ),
             itemBuilder: (context, index) {
               
-              if (index == 3) {
-                return NumericKeyboardGridButton(
-                  label: '+',
-                  onPressed: onAddPressed,
-                );
-              } else if (index == 7) {
-                return NumericKeyboardGridButton(
-                  label: '-',
-                  onPressed: onSubtractPressed,
-                );
-              } else if (index == 11) {
-                return NumericKeyboardGridButton(
-                  label: '*',
-                  onPressed: onMultiplyPressed,
-                );
-              } else if (index == 12) {
-                return NumericKeyboardGridButton(
-                  label: ',',
-                  onPressed: onCommaPressed,
-                );
-              } else if (index == 14) {
-                return NumericKeyboardGridButton(
-                  label: '/',
-                  onPressed: onBackspacePressed,
-                  onLongPress: onBackspaceLongPressed,
-                );
-              } else if (index == 15) {
-                return NumericKeyboardGridButton(
-                  label: '/',
-                  onPressed: onDividePressed,
-                );
+              if (indexToButtonMap.containsKey(index)) {
+                return indexToButtonMap[index]!;
               } else {
                 final buttonIndex = nextButtonIndex();
                 return NumericKeyboardGridButton(

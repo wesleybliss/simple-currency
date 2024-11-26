@@ -8,5 +8,6 @@ class ConstantsKeys {
 class ConstantsKeysSettings {
   
   final lastUpdated = 'lastUpdated';
+  final roundingDecimals = 'roundingDecimals';
   
 }

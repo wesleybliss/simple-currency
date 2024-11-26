@@ -49,6 +49,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
           log.e('Symbol not found: $symbol');
         }
       }
+      
+      ref.read(currenciesProvider.notifier).readCurrencies();
     }
 
     void debugReportStatus() async {
