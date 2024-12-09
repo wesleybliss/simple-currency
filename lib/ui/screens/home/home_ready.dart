@@ -1,10 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
 import 'package:simple_currency/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
-import 'package:simple_currency/ui/widgets/numeric_keyboard_grid/numeric_keyboard_grid.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 class HomeReady extends ConsumerWidget {
@@ -18,6 +18,7 @@ class HomeReady extends ConsumerWidget {
     
     // @debug
     final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
+    final focusedCurrency = selectedCurrencies.firstWhereOrNull((it) => it.symbol == focusedCurrencyInputSymbol);
     final Map<String, double> currencyValues = ref.watch(currencyValuesProvider);
 
     log.d('HomeReady: ${state.currencies.length} total');
@@ -42,13 +43,18 @@ class HomeReady extends ConsumerWidget {
       );
     }
     
+    final currentExchangeRate = focusedCurrency == null
+      ? '' : 'Exchange Rate: \$1 = ${focusedCurrency.rate} $focusedCurrencyInputSymbol';
+    
     return Column(children: [
-      Text('focused: $focusedCurrencyInputSymbol'),
-      Text(currencyValues.entries.map((e) => '${e.key}: ${e.value}').join('\n')),
+      Text(currentExchangeRate),
+      // Text(currencyValues.entries.map((e) => '${e.key}: ${e.value}').join('\n')),
       Expanded(
-        child: CurrenciesInputsList(currencies: selectedCurrencies),
+        child: Container(
+            alignment: Alignment.center,
+            child: CurrenciesInputsList(currencies: selectedCurrencies)),
       ),
-      const NumericKeyboardGrid(),
+      // const NumericKeyboardGrid(),
     ]);
   }
 }

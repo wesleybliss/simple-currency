@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_currency/domain/models/currency.dart';
+import 'package:simple_currency/utils/logger.dart';
 
 class DecimalTextInputFormatter extends TextInputFormatter {
   @override
@@ -36,6 +37,7 @@ class CurrencyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final log = Logger('CurrencyTextField');
     
     final prefix = Padding(
         padding: const EdgeInsets.only(right: 12.0), // Add space to the right of the prefix
@@ -71,6 +73,7 @@ class CurrencyTextField extends StatelessWidget {
       ],
       onChanged: (text) {
         onTextChanged(item.symbol, text);
+        // log.d('@todo Handle change ${item.symbol} - $text');
       },
     );
   }

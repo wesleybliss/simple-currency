@@ -57,15 +57,17 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     }
 
     void updateControllers(Map<String, double> currencyValues) {
-      log.d('updateControllers');
+      log.d('updateControllers\n${currencyValues.entries.toString()}');
       
       for (var entry in currencyValues.entries) {
         final symbol = entry.key;
         final value = entry.value;
-        
+        log.d([
+          'DEBUG DEBUG DEBUG DEBUG: updateControllers $symbol => $value'
+        ].join('\n'));
         // Don't update the input field they've typed in
         if (focusedCurrencyInputSymbol == symbol) return;
-
+        
         if (_controllers.containsKey(symbol)) {
           final controller = _controllers[symbol]!;
           final valueAsString = value.toString();
@@ -111,6 +113,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     }
 
     return ReorderableListView(
+      shrinkWrap: true,
       onReorder: onReorderCurrency,
       children: sortedCurrencies
           .map((e) => ListTile(

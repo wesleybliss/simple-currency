@@ -16,15 +16,15 @@ Map<String, double> convertCurrencies(String symbol, double inputValue, List<Cur
   final Map<String, double> updatedValues = {};
   
   for (var currency in currencies) {
-    if (currency.symbol == symbol) {
+    /*if (currency.symbol == symbol) {
       updatedValues[currency.symbol] = inputValue;
-    } else {
+    } else {*/
       final settings = spot<ISettings>();
       final int decimals = settings.roundingDecimals;
       final double convertedValue = valueInUSD * currency.rate;
       final double roundedValue = double.parse(convertedValue.toStringAsFixed(decimals));
       updatedValues[currency.symbol] = convertedValue;
-    }
+    // }
   }
 
   return updatedValues;
