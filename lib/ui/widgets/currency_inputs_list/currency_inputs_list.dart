@@ -66,11 +66,11 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
           'DEBUG DEBUG DEBUG DEBUG: updateControllers $symbol => $value'
         ].join('\n'));
         // Don't update the input field they've typed in
-        if (focusedCurrencyInputSymbol == symbol) return;
+        if (focusedCurrencyInputSymbol == symbol) continue;
         
         if (_controllers.containsKey(symbol)) {
           final controller = _controllers[symbol]!;
-          final valueAsString = value.toString();
+          final valueAsString = value.toStringAsFixed(2); // @todo make this configurable
 
           log.d('updateControllers $symbol => ${controller.text} -> $valueAsString');
           // Update controller only if the value has changed

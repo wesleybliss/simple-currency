@@ -26,6 +26,8 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
     final double value = double.tryParse(text) ?? 0.0;
     final sortedCurrencies = ref.read(sortedCurrenciesProvider);
 
+    log.d('DEBUG DEBUG: convertCurrencies: ${sortedCurrencies.join(', ')}');
+    
     // Get the updated currency values
     // state = convertCurrencies(symbol, value, sortedCurrencies);
     final next = convertCurrencies(symbol, value, sortedCurrencies);
