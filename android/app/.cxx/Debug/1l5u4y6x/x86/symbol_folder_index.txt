@@ -1,0 +1,1 @@
+/home/wes/Android/Projects/simple_currency/build/app/intermediates/cxx/Debug/1l5u4y6x/obj/x86
