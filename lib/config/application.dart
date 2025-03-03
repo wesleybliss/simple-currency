@@ -7,16 +7,6 @@ import 'package:simple_currency/domain/di/spot_module.dart';
 import 'package:simple_currency/store/SimpleCurrencyStore.dart';
 import 'package:simple_currency/utils/logger.dart';
 
-/*import 'package:memento/di/spot.dart';
-import 'package:memento/di/spot_module.dart';
-import 'package:memento/domain/domain_barrel.dart';
-import 'package:memento/domain/services/i_notification_service.dart';
-import 'package:memento/io/memento_store.dart';
-import 'package:memento/store/settings.dart';
-import 'package:memento/utils/licenses.dart';
-import 'package:memento/utils/logger.dart';
-import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';*/
-
 class Application {
   static bool isInitialized = false;
   static late final FluroRouter router;
@@ -73,4 +63,3 @@ class Application {
     });*/
   }
 }
-

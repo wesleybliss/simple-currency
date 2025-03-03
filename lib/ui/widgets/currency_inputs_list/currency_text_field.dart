@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_currency/domain/models/currency.dart';
+import 'package:simple_currency/theme.dart';
 import 'package:simple_currency/utils/logger.dart';
 
 class DecimalTextInputFormatter extends TextInputFormatter {
@@ -62,7 +63,7 @@ class CurrencyTextField extends StatelessWidget {
       ]),
     );
 
-    final decoration = InputDecoration(
+    /*final decoration = InputDecoration(
       filled: true,
       hintStyle: const TextStyle(color: Color(0xFF757575)),
       fillColor: const Color(0xFF979797).withAlpha(30),
@@ -79,6 +80,11 @@ class CurrencyTextField extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(12)),
         borderSide: BorderSide.none,
       ),
+      hintText: "0.00",
+      prefix: prefix,
+      label: label,
+    );*/
+    final decoration = defaultInputDecoration.copyWith(
       hintText: "0.00",
       prefix: prefix,
       label: label,

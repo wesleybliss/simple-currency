@@ -14,6 +14,8 @@ A simple currency conversion app.
 
 ## TODO
 
+1. Remember theme preference for subsequent launches
+
 ### Settings
 
 1. Show "drag to reorder" handles
