@@ -38,14 +38,18 @@ class CurrencyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final log = Logger('CurrencyTextField');
-    
+
     final prefix = Padding(
-        padding: const EdgeInsets.only(right: 12.0), // Add space to the right of the prefix
+        padding: const EdgeInsets.only(
+            right: 12.0), // Add space to the right of the prefix
         child: Text(item.symbol,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6), // Dimmer text
-          )));
-    
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withOpacity(0.6), // Dimmer text
+                )));
+
     final label = Align(
       alignment: Alignment.centerRight,
       child: Column(children: [
@@ -53,17 +57,36 @@ class CurrencyTextField extends StatelessWidget {
         Align(
             alignment: Alignment.centerRight,
             child: Text(item.name,
-                textAlign: TextAlign.end, style: const TextStyle(fontSize: 12, color: Colors.grey))),
+                textAlign: TextAlign.end,
+                style: const TextStyle(fontSize: 12, color: Colors.grey))),
       ]),
     );
-    
+
+    final decoration = InputDecoration(
+      filled: true,
+      hintStyle: const TextStyle(color: Color(0xFF757575)),
+      fillColor: const Color(0xFF979797).withAlpha(30),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      border: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide.none,
+      ),
+      hintText: "0.00",
+      prefix: prefix,
+      label: label,
+    );
+
     return TextField(
       controller: controller,
-      decoration: InputDecoration(
-        prefix: prefix,
-        label: label,
-        border: const OutlineInputBorder(),
-      ),
+      decoration: decoration,
       textAlign: TextAlign.end,
       keyboardType: TextInputType.number,
       inputFormatters: [
