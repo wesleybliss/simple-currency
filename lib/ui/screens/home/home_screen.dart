@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_currency/domain/constants/constants.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
 import 'package:simple_currency/ui/screens/home/home_error.dart';
 import 'package:simple_currency/ui/screens/home/home_loading.dart';
 import 'package:simple_currency/ui/screens/home/home_ready.dart';
-import 'package:simple_currency/ui/widgets/toolbar.dart';
 import 'package:simple_currency/utils/utils.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -19,7 +17,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     Utils.nextTick(() {
       // Read local currencies & refresh if needed
       ref.read(currenciesProvider.notifier).initializeCurrencies();
@@ -30,17 +28,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(currenciesProvider);
 
-    return Scaffold(
-        appBar: Toolbar(title: Constants.strings.appName),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            ref.read(currenciesProvider.notifier).fetchCurrencies();
-          },
-          child: state.loading
-              ? const HomeLoading()
-              : state.error != null
-                  ? const HomeError()
-                  : const HomeReady(),
-        ));
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.read(currenciesProvider.notifier).fetchCurrencies();
+      },
+      child: state.loading
+          ? const HomeLoading()
+          : state.error != null
+              ? const HomeError()
+              : const HomeReady(),
+    );
   }
 }

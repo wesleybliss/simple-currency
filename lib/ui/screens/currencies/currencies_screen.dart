@@ -17,13 +17,10 @@ class _CurrenciesScreenState extends ConsumerState<CurrenciesScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(currenciesProvider);
 
-    return Scaffold(
-      appBar: const Toolbar(title: "Currencies", showActions: false),
-      body: state.loading
+    return state.loading
           ? const CurrenciesLoading()
           : state.error != null
               ? const CurrenciesError()
-              : const CurrenciesReady(),
-    );
+              : const CurrenciesReady();
   }
 }

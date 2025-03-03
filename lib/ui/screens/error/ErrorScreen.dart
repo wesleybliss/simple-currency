@@ -8,11 +8,8 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(message)),
-      body: Center(
+    return Center(
         child: Text(message),
-      ),
-    );
+      );
   }
 }

@@ -62,9 +62,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: const Toolbar(title: "Settings", showActions: false),
-      body: settingsAsyncValue.when(
+    return settingsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
           data: (settings) {
@@ -73,7 +71,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 settings.roundingDecimals.toString();
 
             return renderBody(settings);
-          }),
-    );
+          });
   }
 }

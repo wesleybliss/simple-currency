@@ -75,6 +75,7 @@ class Settings implements ISettings {
   }
 
   // Method to save the settings to SharedPreferences
+  @override
   Future<void> saveToPreferences(SharedPreferences prefs) async {
     if (lastUpdated != null) {
       await prefs.setString(
