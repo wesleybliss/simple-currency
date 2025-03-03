@@ -9,7 +9,7 @@ class ConstantsStrings {
     const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
     if (isProduction) {
-      base = 'https://myprodserver.com/api';
+      base = 'https://simple-currency-cron.vercel.app/api';
     } else {
       base = 'http://localhost:3001/api';
     }
