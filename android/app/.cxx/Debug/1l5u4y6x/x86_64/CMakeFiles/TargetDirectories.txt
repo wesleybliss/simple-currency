@@ -1,2 +1,0 @@
-/home/wes/Android/Projects/simple_currency/android/app/.cxx/Debug/1l5u4y6x/x86_64/CMakeFiles/edit_cache.dir
-/home/wes/Android/Projects/simple_currency/android/app/.cxx/Debug/1l5u4y6x/x86_64/CMakeFiles/rebuild_cache.dir
