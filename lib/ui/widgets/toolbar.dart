@@ -24,13 +24,6 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
     final List<Widget> actions = !showActions
         ? []
         : [
-            IconButton(
-              icon: const Icon(Icons.bug_report), // Heart icon for favorites
-              tooltip: 'Debug',
-              onPressed: () {
-                Application.router.navigateTo(context, '/debug');
-              },
-            ),
             const ToolbarThemeToggle(),
             IconButton(
               icon: const Icon(Icons.favorite), // Heart icon for favorites

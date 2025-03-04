@@ -59,6 +59,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
             child: const Text('Currencies'),
           ),
+          IconButton(
+            icon: const Icon(Icons.bug_report), // Heart icon for favorites
+            tooltip: 'Debug',
+            onPressed: () {
+              Application.router.navigateTo(context, '/debug');
+            },
+          ),
         ],
       );
     }
