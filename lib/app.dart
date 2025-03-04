@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
 import 'package:simple_currency/config/routing/routes.dart';
 import 'package:simple_currency/domain/constants/constants.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
-import 'package:simple_currency/domain/di/providers/state/theme_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/settings_selectors.dart';
 
 class SimpleCurrencyApp extends ConsumerWidget {
   SimpleCurrencyApp({super.key}) {
@@ -37,14 +36,17 @@ class SimpleCurrencyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+    final themeAsyncValue = ref.watch(themeProvider);
 
-    return settingsAsyncValue.when(
+    return themeAsyncValue.when(
         loading: () => const CircularProgressIndicator(),
         error: (error, stackTrace) => Text('Error: $error'),
-        data: (settings) {
-          //settings.darkMode ? Brightness.dark : Brightness.light,
+        data: (theme) {
+          final themeMode = theme == "system"
+              ? ThemeMode.system
+              : theme == "dark"
+                  ? ThemeMode.dark
+                  : ThemeMode.light;
           return buildApp(context, themeMode);
         });
   }

@@ -74,6 +74,10 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
             ListTile(
+              title: const Text('theme'),
+              trailing: Text(settings.theme),
+            ),
+            ListTile(
               title: const Text('showDragReorderHandles'),
               trailing: Text(settings.showDragReorderHandles.toString()),
             ),

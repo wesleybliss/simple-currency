@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
-import 'package:simple_currency/domain/di/providers/state/theme_provider.dart';
+
+import 'toolbar_theme_toggle.dart';
 
 class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
@@ -20,9 +21,6 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    final themeNotifier = ref.read(themeProvider.notifier);
-
     final List<Widget> actions = !showActions
         ? []
         : [
@@ -33,15 +31,7 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
                 Application.router.navigateTo(context, '/debug');
               },
             ),
-            IconButton(
-              icon: themeMode == ThemeMode.system
-                  ? const Icon(Icons.auto_mode)
-                  : themeMode == ThemeMode.light
-                      ? const Icon(Icons.light_mode)
-                      : const Icon(Icons.dark_mode),
-              tooltip: 'Debug',
-              onPressed: themeNotifier.cycleNextTheme,
-            ),
+            const ToolbarThemeToggle(),
             IconButton(
               icon: const Icon(Icons.favorite), // Heart icon for favorites
               tooltip: 'Favorites',

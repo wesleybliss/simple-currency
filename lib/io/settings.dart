@@ -4,6 +4,8 @@ import 'package:simple_currency/domain/io/i_settings.dart';
 
 class Settings implements ISettings {
   @override
+  String theme = "system";
+  @override
   DateTime? lastUpdated;
   @override
   int roundingDecimals = 4;
@@ -19,6 +21,7 @@ class Settings implements ISettings {
   String showCurrencyRate = "selected";
 
   Settings({
+    this.theme = "system",
     this.lastUpdated,
     this.roundingDecimals = 4,
     this.showDragReorderHandles = true,
@@ -30,6 +33,7 @@ class Settings implements ISettings {
 
   @override
   Settings copyWith({
+    String? theme,
     DateTime? lastUpdated,
     int? roundingDecimals,
     bool? showDragReorderHandles,
@@ -39,6 +43,7 @@ class Settings implements ISettings {
     String? showCurrencyRate,
   }) =>
       Settings(
+        theme: theme ?? this.theme,
         lastUpdated: lastUpdated ?? this.lastUpdated,
         roundingDecimals: roundingDecimals ?? this.roundingDecimals,
         showDragReorderHandles:
@@ -54,6 +59,7 @@ class Settings implements ISettings {
   // Factory method to create a Settings object from SharedPreferences
   factory Settings.fromPreferences(SharedPreferences prefs) {
     return Settings(
+      theme: prefs.getString(Constants.keys.settings.theme) ?? "system",
       lastUpdated: prefs.getString(Constants.keys.settings.lastUpdated) != null
           ? DateTime.parse(
               prefs.getString(Constants.keys.settings.lastUpdated)!)
@@ -77,6 +83,7 @@ class Settings implements ISettings {
   // Method to save the settings to SharedPreferences
   @override
   Future<void> saveToPreferences(SharedPreferences prefs) async {
+    await prefs.setString(Constants.keys.settings.theme, theme);
     if (lastUpdated != null) {
       await prefs.setString(
           Constants.keys.settings.lastUpdated, lastUpdated!.toIso8601String());

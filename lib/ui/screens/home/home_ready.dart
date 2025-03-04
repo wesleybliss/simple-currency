@@ -15,37 +15,40 @@ class HomeReady extends ConsumerWidget {
     final log = Logger('HomeReady');
     final state = ref.watch(currenciesProvider);
     final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
-    
+
     // @debug
-    final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
-    final focusedCurrency = selectedCurrencies.firstWhereOrNull((it) => it.symbol == focusedCurrencyInputSymbol);
-    final Map<String, double> currencyValues = ref.watch(currencyValuesProvider);
+    final focusedCurrencyInputSymbol =
+        ref.watch(focusedCurrencyInputSymbolProvider);
+    final focusedCurrency = selectedCurrencies
+        .firstWhereOrNull((it) => it.symbol == focusedCurrencyInputSymbol);
+    final Map<String, double> currencyValues =
+        ref.watch(currencyValuesProvider);
 
     log.d('HomeReady: ${state.currencies.length} total');
     log.d('HomeReady: ${selectedCurrencies.length} selected');
-    
+
     if (selectedCurrencies.isEmpty == true) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (state.error != null)
-            Text(state.error!),
-          const Center(
-            child: Text('You don\'t have any currencies selected yet. \nAdd some by clicking the button below.')
-          ),
-          const SizedBox(height: 24.0),
-          TextButton(
-            onPressed: () => Application.router.navigateTo(context, '/currencies'),
-            child: const Text('Manage Currencies'),
-          ),
-        ]
-      );
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (state.error != null) Text(state.error!),
+            const Center(
+                child: Text(
+                    'You don\'t have any currencies selected yet. \nAdd some by clicking the button below.')),
+            const SizedBox(height: 24.0),
+            TextButton(
+              onPressed: () =>
+                  Application.router.navigateTo(context, '/currencies'),
+              child: const Text('Manage Currencies'),
+            ),
+          ]);
     }
-    
+
     final currentExchangeRate = focusedCurrency == null
-      ? '' : 'Exchange Rate: \$1 = ${focusedCurrency.rate} $focusedCurrencyInputSymbol';
-    
+        ? ''
+        : 'Exchange Rate: \$1 = ${focusedCurrency.rate} $focusedCurrencyInputSymbol';
+
     return Column(children: [
       Text(currentExchangeRate),
       // Text(currencyValues.entries.map((e) => '${e.key}: ${e.value}').join('\n')),

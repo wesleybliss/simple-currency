@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
 import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
 import 'package:simple_currency/io/settings.dart';
-import 'package:simple_currency/ui/widgets/toolbar.dart';
 
 import 'widgets/inputs_position_dropdown.dart';
 import 'widgets/round_decimals_to_input.dart';
@@ -11,6 +10,7 @@ import 'widgets/show_copy_to_clipboard_buttons_switch.dart';
 import 'widgets/show_currency_rate_dropdown.dart';
 import 'widgets/show_drag_reorder_handles_switch.dart';
 import 'widgets/show_full_currency_name_label_switch.dart';
+import 'widgets/theme_dropdown.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -22,17 +22,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final settingsAsyncValue = ref.watch(settingsNotifierProvider);
-    final Map<String, TextEditingController> _controllers = {
+    final Map<String, TextEditingController> controllers = {
       "roundingDecimalsController": TextEditingController(),
     };
 
-    for (var i = 0; i < 3; i++) {
-      _controllers.putIfAbsent("controller-$i", () => TextEditingController());
-    }
+    /*for (var i = 0; i < 3; i++) {
+      controllers.putIfAbsent("controller-$i", () => TextEditingController());
+    }*/
 
     @override
     void dispose() {
-      for (var controller in _controllers.values) {
+      for (var controller in controllers.values) {
         controller.dispose();
       }
       super.dispose();
@@ -41,8 +41,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     Widget renderBody(Settings settings) {
       return Column(
         children: [
+          ThemeDropdown(value: settings.theme),
           RoundDecimalsToInput(
-              controller: _controllers["roundingDecimalsController"]),
+              controller: controllers["roundingDecimalsController"]),
           ShowDragReorderHandlesSwitch(value: settings.showDragReorderHandles),
           ShowCopyToClipboardButtonsSwitch(
               value: settings.showCopyToClipboardButtons),
@@ -63,14 +64,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
 
     return settingsAsyncValue.when(
-          loading: () => const CircularProgressIndicator(),
-          error: (error, stackTrace) => Text('Error: $error'),
-          data: (settings) {
-            // Set initial values
-            _controllers["roundingDecimalsController"]?.text =
-                settings.roundingDecimals.toString();
+        loading: () => const CircularProgressIndicator(),
+        error: (error, stackTrace) => Text('Error: $error'),
+        data: (settings) {
+          // Set initial values
+          controllers["roundingDecimalsController"]?.text =
+              settings.roundingDecimals.toString();
 
-            return renderBody(settings);
-          });
+          return renderBody(settings);
+        });
   }
 }
