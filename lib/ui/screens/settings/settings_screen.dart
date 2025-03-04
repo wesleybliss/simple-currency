@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 import 'package:simple_currency/io/settings.dart';
 
 import 'widgets/inputs_position_dropdown.dart';

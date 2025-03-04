@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/io/settings.dart';
 import 'package:simple_currency/store/SimpleCurrencyStore.dart';
@@ -98,8 +98,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               trailing: Text(settings.showCurrencyRate.toString()),
             ),
             TextButton(
-              onPressed: () =>
-                  Application.router.navigateTo(context, '/currencies'),
+              onPressed: () => Application.router.navigateTo(context, '/currencies'),
               child: const Text('Manage Currencies'),
             ),
             TextButton(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 
 class ShowDragReorderHandlesSwitch extends ConsumerWidget {
   final bool value;
@@ -16,9 +16,7 @@ class ShowDragReorderHandlesSwitch extends ConsumerWidget {
       title: const Text('Show drag to reorder handles'),
       value: value,
       onChanged: (bool value) {
-        ref
-            .read(settingsNotifierProvider.notifier)
-            .setDragReorderHandles(value);
+        ref.read(settingsNotifierProvider.notifier).setDragReorderHandles(value);
       },
       secondary: const Icon(Icons.drag_indicator),
     );

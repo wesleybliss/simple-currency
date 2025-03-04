@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 
 class InputsPositionDropdown extends ConsumerWidget {
   final String value;
@@ -29,17 +29,15 @@ class InputsPositionDropdown extends ConsumerWidget {
         ),
       ],
       onChanged: (String? value) {
-        ref
-            .read(settingsNotifierProvider.notifier)
-            .setInputsPosition(value ?? "center");
+        ref.read(settingsNotifierProvider.notifier).setInputsPosition(value ?? "center");
       },
       hint: const Text('Select an option'),
     );
 
     return ListTile(
-        title: const Text('Align inputs to'),
-        leading: const Icon(Icons.align_vertical_center),
-        trailing: dropdown,
-        );
+      title: const Text('Align inputs to'),
+      leading: const Icon(Icons.align_vertical_center),
+      trailing: dropdown,
+    );
   }
 }

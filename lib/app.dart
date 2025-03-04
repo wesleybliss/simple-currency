@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
 import 'package:simple_currency/config/routing/routes.dart';
 import 'package:simple_currency/domain/constants/constants.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_selectors.dart';
+import 'package:simple_currency/domain/di/providers/settings_selectors.dart';
 
 class SimpleCurrencyApp extends ConsumerWidget {
   SimpleCurrencyApp({super.key}) {
@@ -25,9 +25,7 @@ class SimpleCurrencyApp extends ConsumerWidget {
       ),
       // darkTheme: ThemeData.dark(),
       darkTheme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: const Color.fromRGBO(178, 239, 155, 171),
-          brightness: Brightness.dark),
+          useMaterial3: true, colorSchemeSeed: const Color.fromRGBO(178, 239, 155, 171), brightness: Brightness.dark),
       themeMode: themeMode,
       initialRoute: Routes.home,
       onGenerateRoute: Application.router.generator,

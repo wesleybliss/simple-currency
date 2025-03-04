@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
 import 'package:simple_currency/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
 import 'package:simple_currency/utils/logger.dart';
 

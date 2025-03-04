@@ -14,11 +14,13 @@ class CurrenciesState {
   final List<Currency> currencies;
   final bool loading;
   final String? error;
+  final bool isFetching;
 
   CurrenciesState({
     List<Currency>? currencies,
     this.loading = false,
     this.error,
+    this.isFetching = false,
   }) : currencies = currencies ?? List.empty();
 }
 
@@ -40,7 +42,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     state = CurrenciesState(currencies: [], loading: false);
   }
 
-  Future<List<Currency>> readCurrencies({bool showLoading = false}) async {
+  Future<List<Currency>> readCurrencies({bool showLoading = true}) async {
     if (showLoading) {
       state = CurrenciesState(loading: true);
     }
@@ -57,7 +59,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   }
 
   Future<void> fetchCurrencies() async {
-    state = CurrenciesState(loading: true, currencies: state.currencies);
+    state = CurrenciesState(loading: true, isFetching: true, currencies: state.currencies);
 
     try {
       final CurrencyResponse? res = await currenciesRepo.fetchCurrencies();
@@ -80,10 +82,10 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
         }
       });
 
-      state = CurrenciesState(currencies: data, loading: false);
+      state = CurrenciesState(loading: false, isFetching: false, currencies: data);
     } catch (e) {
       log.e('CurrenciesNotifier error', e);
-      state = CurrenciesState(loading: false, error: e.toString());
+      state = CurrenciesState(loading: false, isFetching: false, error: e.toString());
     }
   }
 
@@ -95,7 +97,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     final lastUpdatedDiff = lastUpdated == null ? 0 : DateTime.now().difference(lastUpdated).inHours;
     final updateFrequencyInHours = prefs.getInt(keys.updateFrequencyInHours);
     final shouldUpdate = lastUpdated == null || lastUpdatedDiff > (updateFrequencyInHours ?? 12);
-    final savedCurrencies = await readCurrencies(showLoading: false);
+    final savedCurrencies = await readCurrencies();
 
     // If we haven't fetched in more than 6 hours, fetch again
     if (savedCurrencies.isEmpty || shouldUpdate) {

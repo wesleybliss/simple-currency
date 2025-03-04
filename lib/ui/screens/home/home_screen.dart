@@ -35,7 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: state.loading
           ? state.currencies.isNotEmpty
               ? const HomeReady()
-              : const HomeLoading()
+              : HomeLoading(isFetching: state.isFetching)
           : state.error != null
               ? const HomeError()
               : const HomeReady(),

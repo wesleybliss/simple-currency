@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:simple_currency/domain/di/providers/sorted_currencies_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
-import 'package:simple_currency/domain/di/providers/state/sorted_currencies_provider.dart';
 import 'package:simple_currency/domain/models/currency.dart';
 import 'package:simple_currency/utils/currency_utils.dart';
 import 'package:simple_currency/utils/logger.dart';
@@ -20,14 +20,14 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
       state[currency] = 0.0;
     }
   }
-  
+
   // Update the value for a specific currency
   Map<String, double> setValue(String symbol, String text, {updateSelf = true}) {
     final double value = double.tryParse(text) ?? 0.0;
     final sortedCurrencies = ref.read(sortedCurrenciesProvider);
 
     log.d('DEBUG DEBUG: convertCurrencies: ${sortedCurrencies.join(', ')}');
-    
+
     // Get the updated currency values
     // state = convertCurrencies(symbol, value, sortedCurrencies);
     final next = convertCurrencies(symbol, value, sortedCurrencies);
@@ -35,9 +35,9 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
     /*if (!updateSelf) {
       next.removeWhere((key, value) => key == symbol);
     }*/
-    
+
     state = next;
-    
+
     return state;
   }
 }

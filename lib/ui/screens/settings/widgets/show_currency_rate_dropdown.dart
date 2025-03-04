@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 
 class ShowCurrencyRateDropdown extends ConsumerWidget {
   final String value;
@@ -29,9 +29,7 @@ class ShowCurrencyRateDropdown extends ConsumerWidget {
         ),
       ],
       onChanged: (String? value) {
-        ref
-            .read(settingsNotifierProvider.notifier)
-            .setShowCurrencyRate(value ?? "selected");
+        ref.read(settingsNotifierProvider.notifier).setShowCurrencyRate(value ?? "selected");
       },
       hint: const Text('Select an option'),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 
 class UpdateFrequencyInHoursDropdown extends ConsumerWidget {
   final int value;

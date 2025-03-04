@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
+import 'package:simple_currency/domain/di/providers/settings_provider.dart';
 
 class ShowFullCurrencyNameLabelSwitch extends ConsumerWidget {
   final bool value;
@@ -16,9 +16,7 @@ class ShowFullCurrencyNameLabelSwitch extends ConsumerWidget {
       title: const Text('Show full currency name label'),
       value: value,
       onChanged: (bool value) {
-        ref
-            .read(settingsNotifierProvider.notifier)
-            .setShowFullCurrencyNameLabel(value);
+        ref.read(settingsNotifierProvider.notifier).setShowFullCurrencyNameLabel(value);
       },
       secondary: const Icon(Icons.label),
     );
