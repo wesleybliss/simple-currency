@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_currency/config/application.dart';
 import 'package:simple_currency/domain/di/providers/state/currencies_provider.dart';
 import 'package:simple_currency/domain/di/providers/state/currency_values_provider.dart';
+import 'package:simple_currency/domain/di/providers/state/settings_provider.dart';
 import 'package:simple_currency/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
 import 'package:simple_currency/utils/logger.dart';
+
+import 'widgets/current_exchange_rates_info.dart';
 
 class HomeReady extends ConsumerWidget {
   const HomeReady({super.key});
@@ -13,6 +16,7 @@ class HomeReady extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final log = Logger('HomeReady');
+    final settingsAsyncValue = ref.watch(settingsNotifierProvider);
     final state = ref.watch(currenciesProvider);
     final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
 
@@ -45,19 +49,29 @@ class HomeReady extends ConsumerWidget {
           ]);
     }
 
-    final currentExchangeRate = focusedCurrency == null
-        ? ''
-        : 'Exchange Rate: \$1 = ${focusedCurrency.rate} $focusedCurrencyInputSymbol';
-
-    return Column(children: [
-      Text(currentExchangeRate),
-      // Text(currencyValues.entries.map((e) => '${e.key}: ${e.value}').join('\n')),
-      Expanded(
-        child: Container(
-            alignment: Alignment.center,
-            child: CurrenciesInputsList(currencies: selectedCurrencies)),
-      ),
-      // const NumericKeyboardGrid(),
-    ]);
+    return settingsAsyncValue.when(
+        loading: () => const CircularProgressIndicator(),
+        error: (error, stackTrace) => Text('Error: $error'),
+        data: (settings) {
+          return Column(children: [
+            CurrentExchangeRatesInfo(
+              focusedCurrency: focusedCurrency,
+              focusedCurrencyInputSymbol: focusedCurrencyInputSymbol,
+              currencyValues: currencyValues,
+              showCurrencyRate: settings.showCurrencyRate,
+            ),
+            // Text(currencyValues.entries.map((e) => '${e.key}: ${e.value}').join('\n')),
+            Expanded(
+              child: Container(
+                  alignment: settings.inputsPosition == "top"
+                      ? Alignment.topCenter
+                      : settings.inputsPosition == "bottom"
+                          ? Alignment.bottomCenter
+                          : Alignment.center,
+                  child: CurrenciesInputsList(currencies: selectedCurrencies)),
+            ),
+            // const NumericKeyboardGrid(),
+          ]);
+        });
   }
 }

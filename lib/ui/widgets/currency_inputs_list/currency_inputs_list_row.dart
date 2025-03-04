@@ -8,6 +8,8 @@ class CurrencyInputsListRow extends StatelessWidget {
   final TextEditingController? controller;
   final void Function(String) onFocusChanged;
   final void Function(String, String) onTextChanged;
+  final bool showCopyToClipboardButtons;
+  final bool showFullCurrencyNameLabel;
 
   const CurrencyInputsListRow({
     super.key,
@@ -15,6 +17,8 @@ class CurrencyInputsListRow extends StatelessWidget {
     required this.controller,
     required this.onFocusChanged,
     required this.onTextChanged,
+    this.showCopyToClipboardButtons = true,
+    this.showFullCurrencyNameLabel = true,
   });
 
   @override
@@ -28,14 +32,18 @@ class CurrencyInputsListRow extends StatelessWidget {
           }
         },
         child: CurrencyTextField(
-            item: item, controller: controller, onTextChanged: onTextChanged),
+            item: item,
+            controller: controller,
+            onTextChanged: onTextChanged,
+            showFullCurrencyNameLabel: showFullCurrencyNameLabel),
       )),
-      IconButton(
-        icon: const Icon(Icons.content_copy),
-        onPressed: () {
-          context.copyToClipboard(controller?.text ?? '');
-        },
-      ),
+      if (showCopyToClipboardButtons)
+        IconButton(
+          icon: const Icon(Icons.content_copy),
+          onPressed: () {
+            context.copyToClipboard(controller?.text ?? '');
+          },
+        ),
     ]);
   }
 }

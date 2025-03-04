@@ -28,12 +28,14 @@ class CurrencyTextField extends StatelessWidget {
   final Currency item;
   final TextEditingController? controller;
   final void Function(String, String) onTextChanged;
+  final bool showFullCurrencyNameLabel;
 
   const CurrencyTextField({
     super.key,
     required this.item,
     required this.controller,
     required this.onTextChanged,
+    this.showFullCurrencyNameLabel = true,
   });
 
   @override
@@ -48,42 +50,23 @@ class CurrencyTextField extends StatelessWidget {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withOpacity(0.6), // Dimmer text
+                      .withAlpha(90), // Dimmer text
                 )));
 
-    final label = Align(
-      alignment: Alignment.centerRight,
-      child: Column(children: [
-        // Align(alignment: Alignment.centerRight, child: Text(item.symbol, textAlign: TextAlign.end)),
-        Align(
+    final label = showFullCurrencyNameLabel
+        ? Align(
             alignment: Alignment.centerRight,
-            child: Text(item.name,
-                textAlign: TextAlign.end,
-                style: const TextStyle(fontSize: 12, color: Colors.grey))),
-      ]),
-    );
+            child: Column(children: [
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(item.name,
+                      textAlign: TextAlign.end,
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.grey))),
+            ]),
+          )
+        : null;
 
-    /*final decoration = InputDecoration(
-      filled: true,
-      hintStyle: const TextStyle(color: Color(0xFF757575)),
-      fillColor: const Color(0xFF979797).withAlpha(30),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      border: const OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide.none,
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide.none,
-      ),
-      enabledBorder: const OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide.none,
-      ),
-      hintText: "0.00",
-      prefix: prefix,
-      label: label,
-    );*/
     final decoration = defaultInputDecoration.copyWith(
       hintText: "0.00",
       prefix: prefix,

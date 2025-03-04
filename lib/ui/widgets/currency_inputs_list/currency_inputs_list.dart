@@ -132,10 +132,15 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
                           ? const Icon(Icons.drag_handle)
                           : null,
                       title: CurrencyInputsListRow(
-                          item: e,
-                          controller: _controllers[e.symbol],
-                          onFocusChanged: onFocusChanged,
-                          onTextChanged: onTextChanged),
+                        item: e,
+                        controller: _controllers[e.symbol],
+                        onFocusChanged: onFocusChanged,
+                        onTextChanged: onTextChanged,
+                        showCopyToClipboardButtons:
+                            settings.showCopyToClipboardButtons,
+                        showFullCurrencyNameLabel:
+                            settings.showFullCurrencyNameLabel,
+                      ),
                     ))
                 .toList(),
           );
