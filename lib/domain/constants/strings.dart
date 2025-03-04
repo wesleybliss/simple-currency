@@ -1,5 +1,6 @@
 class ConstantsStrings {
-  final appName = 'Simple Currency';
+  // final appName = 'Simple Currency';
+  final appName = 'CNVRT';
   final appSlug = 'simple-currency';
 
   String get baseUrl {

@@ -21,19 +21,6 @@ Widget _render(Widget child, String title,
           )
         : child;
 
-/*Handler handlerFor(Widget child, [RouteWrapper wrapper = RouteWrapper.normal]) {
-  return Handler(handlerFunc: (context, params) {
-    return _render(child, wrapper);
-  });
-}
-
-Handler paramsHandlerFor(ParamsHandler childFn, [RouteWrapper wrapper = RouteWrapper.normal]) {
-  return Handler(handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
-    final child = childFn(params);
-    return _render(child, wrapper);
-  });
-}*/
-
 Handler handlerFor(Widget child, String title, {withScaffold = true}) {
   return Handler(handlerFunc: (context, params) {
     return _render(child, title, withScaffold: withScaffold);

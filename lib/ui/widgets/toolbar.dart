@@ -24,7 +24,6 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
     final List<Widget> actions = !showActions
         ? []
         : [
-            const ToolbarThemeToggle(),
             IconButton(
               icon: const Icon(Icons.favorite), // Heart icon for favorites
               tooltip: 'Favorites',
@@ -32,6 +31,7 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
                 Application.router.navigateTo(context, '/currencies');
               },
             ),
+            const ToolbarThemeToggle(),
             IconButton(
               icon: const Icon(Icons.settings), // Settings icon
               tooltip: 'Settings',
@@ -44,7 +44,13 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
           ];
 
     return AppBar(
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Theme.of(context).textTheme.titleLarge?.color?.withAlpha(50) ??
+              Colors.grey, /*fontWeight: FontWeight.w800*/
+        ),
+      ),
       actions: actions,
     );
   }

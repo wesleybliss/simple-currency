@@ -28,3 +28,6 @@ A simple currency conversion app.
 
 1. Temperature F to/from C
 2. Distance Miles to/from Kilometers
+
+
+`flutter build apk --release && adb -s 'adb-RFCX60JX8MP-MRJbrg._adb-tls-connect._tcp' install build/app/outputs/flutter-apk/app-release.apk`
