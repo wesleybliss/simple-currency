@@ -6,8 +6,7 @@ import 'package:simple_currency/utils/logger.dart';
 
 class DecimalTextInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     // Allow only digits and one decimal point
     if (newValue.text.isEmpty) {
       return newValue; // Allow empty input
@@ -43,14 +42,10 @@ class CurrencyTextField extends StatelessWidget {
     final log = Logger('CurrencyTextField');
 
     final prefix = Padding(
-        padding: const EdgeInsets.only(
-            right: 12.0), // Add space to the right of the prefix
+        padding: const EdgeInsets.only(right: 12.0), // Add space to the right of the prefix
         child: Text(item.symbol,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withAlpha(90), // Dimmer text
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(90), // Dimmer text
                 )));
 
     final label = showFullCurrencyNameLabel
@@ -60,9 +55,7 @@ class CurrencyTextField extends StatelessWidget {
               Align(
                   alignment: Alignment.centerRight,
                   child: Text(item.name,
-                      textAlign: TextAlign.end,
-                      style:
-                          const TextStyle(fontSize: 12, color: Colors.grey))),
+                      textAlign: TextAlign.end, style: const TextStyle(fontSize: 12, color: Colors.grey))),
             ]),
           )
         : null;
@@ -77,6 +70,7 @@ class CurrencyTextField extends StatelessWidget {
       controller: controller,
       decoration: decoration,
       textAlign: TextAlign.end,
+      style: const TextStyle(fontFamily: 'monospace'),
       keyboardType: TextInputType.number,
       inputFormatters: [
         // FilteringTextInputFormatter.digitsOnly,

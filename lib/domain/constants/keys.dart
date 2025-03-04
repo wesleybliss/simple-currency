@@ -5,6 +5,7 @@ class ConstantsKeys {
 class ConstantsKeysSettings {
   final theme = 'theme';
   final lastUpdated = 'lastUpdated';
+  final updateFrequencyInHours = 'updateFrequencyInHours';
   final roundingDecimals = 'roundingDecimals';
   final showDragReorderHandles = "showDragReorderHandles";
   final showCopyToClipboardButtons = "showCopyToClipboardButtons";

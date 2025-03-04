@@ -39,74 +39,72 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     await currencyBox.removeAllAsync();
     state = CurrenciesState(currencies: [], loading: false);
   }
-  
-  Future<List<Currency>> readCurrencies({ bool showLoading = true }) async {
-    
+
+  Future<List<Currency>> readCurrencies({bool showLoading = false}) async {
     if (showLoading) {
       state = CurrenciesState(loading: true);
     }
-    
+
     // final items = await currencyBox.getAllAsync();
     final items = await currencyBox.query().order(Currency_.order).build().findAsync();
-    
+
     state = CurrenciesState(currencies: items, loading: false);
-    
+
     // log.d('readCurrencies:\n${items.map((e) => '${e.symbol}: (${e.selected})').join('\n')}');
     log.d('readCurrencies: ${items.length}');
-    
+
     return items;
-    
   }
-  
+
   Future<void> fetchCurrencies() async {
-    state = CurrenciesState(loading: true);
-    
+    state = CurrenciesState(loading: true, currencies: state.currencies);
+
     try {
       final CurrencyResponse? res = await currenciesRepo.fetchCurrencies();
-      
+
       final data = res?.data.currencies ?? [];
       final prev = await currencyBox.getAllAsync();
-      
+
       // Update currencies without destroying locally saved data, like selected state
       store.runInTransaction(TxMode.write, () {
         for (var i = 0; i < data.length; i++) {
           final it = data[i];
           final existing = prev.firstWhereOrNull((e) => e.symbol == it.symbol);
-          
+
           if (existing != null) {
             // log.d('DEBUG: Updating currency: ${it.symbol} (selected: ${existing.selected})');
             data[i] = it.copyWith(selected: existing.selected);
           }
-          
+
           currencyBox.put(it);
         }
       });
-      
+
       state = CurrenciesState(currencies: data, loading: false);
     } catch (e) {
       log.e('CurrenciesNotifier error', e);
       state = CurrenciesState(loading: false, error: e.toString());
     }
   }
-  
-  Future<void> initializeCurrencies() async {
 
+  Future<void> initializeCurrencies() async {
+    final keys = Constants.keys.settings;
     final prefs = await SharedPreferences.getInstance();
-    final lastUpdatedValue = prefs.getString(Constants.keys.settings.lastUpdated);
+    final lastUpdatedValue = prefs.getString(keys.lastUpdated);
     final lastUpdated = lastUpdatedValue != null ? DateTime.parse(lastUpdatedValue) : null;
-    final shouldUpdate = lastUpdated == null || DateTime.now().difference(lastUpdated).inHours > 6;
-    final savedCurrencies = await readCurrencies();
-    
+    final lastUpdatedDiff = lastUpdated == null ? 0 : DateTime.now().difference(lastUpdated).inHours;
+    final updateFrequencyInHours = prefs.getInt(keys.updateFrequencyInHours);
+    final shouldUpdate = lastUpdated == null || lastUpdatedDiff > (updateFrequencyInHours ?? 12);
+    final savedCurrencies = await readCurrencies(showLoading: false);
+
     // If we haven't fetched in more than 6 hours, fetch again
     if (savedCurrencies.isEmpty || shouldUpdate) {
       log.d('Initializing currencies. Either no currencies saved, or more than 6 hours since last update');
       await fetchCurrencies();
-      
-      prefs.setString(Constants.keys.settings.lastUpdated, DateTime.now().toIso8601String());
+
+      prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String());
     }
-    
   }
-  
 }
 
 final currenciesProvider = StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
@@ -121,8 +119,6 @@ final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
   return currenciesState.currencies.where((currency) => currency.selected).toList();
 });
 
-
-
 class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
   @override
   String? build() => null;
@@ -134,5 +130,4 @@ class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
 
 // Provider to track the currently selected input's currency symbol
 final focusedCurrencyInputSymbolProvider =
-  NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(
-      FocusedCurrencyInputSymbolNotifier.new);
+    NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(FocusedCurrencyInputSymbolNotifier.new);

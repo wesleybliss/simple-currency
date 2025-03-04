@@ -11,6 +11,7 @@ import 'widgets/show_currency_rate_dropdown.dart';
 import 'widgets/show_drag_reorder_handles_switch.dart';
 import 'widgets/show_full_currency_name_label_switch.dart';
 import 'widgets/theme_dropdown.dart';
+import 'widgets/update_frequency_in_hours_dropdown.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -42,13 +43,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       return Column(
         children: [
           ThemeDropdown(value: settings.theme),
-          RoundDecimalsToInput(
-              controller: controllers["roundingDecimalsController"]),
+          RoundDecimalsToInput(controller: controllers["roundingDecimalsController"]),
+          UpdateFrequencyInHoursDropdown(value: settings.updateFrequencyInHours),
           ShowDragReorderHandlesSwitch(value: settings.showDragReorderHandles),
-          ShowCopyToClipboardButtonsSwitch(
-              value: settings.showCopyToClipboardButtons),
-          ShowFullCurrencyNameLabelSwitch(
-              value: settings.showFullCurrencyNameLabel),
+          ShowCopyToClipboardButtonsSwitch(value: settings.showCopyToClipboardButtons),
+          ShowFullCurrencyNameLabelSwitch(value: settings.showFullCurrencyNameLabel),
           InputsPositionDropdown(value: settings.inputsPosition),
           ShowCurrencyRateDropdown(value: settings.showCurrencyRate),
           ElevatedButton(
@@ -75,8 +74,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         error: (error, stackTrace) => Text('Error: $error'),
         data: (settings) {
           // Set initial values
-          controllers["roundingDecimalsController"]?.text =
-              settings.roundingDecimals.toString();
+          controllers["roundingDecimalsController"]?.text = settings.roundingDecimals.toString();
 
           return renderBody(settings);
         });

@@ -33,7 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ref.read(currenciesProvider.notifier).fetchCurrencies();
       },
       child: state.loading
-          ? const HomeLoading()
+          ? state.currencies.isNotEmpty
+              ? const HomeReady()
+              : const HomeLoading()
           : state.error != null
               ? const HomeError()
               : const HomeReady(),

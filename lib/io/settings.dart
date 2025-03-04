@@ -8,6 +8,8 @@ class Settings implements ISettings {
   @override
   DateTime? lastUpdated;
   @override
+  int updateFrequencyInHours = 12;
+  @override
   int roundingDecimals = 4;
   @override
   bool showDragReorderHandles = true;
@@ -23,6 +25,7 @@ class Settings implements ISettings {
   Settings({
     this.theme = "system",
     this.lastUpdated,
+    this.updateFrequencyInHours = 12,
     this.roundingDecimals = 4,
     this.showDragReorderHandles = true,
     this.showCopyToClipboardButtons = true,
@@ -35,6 +38,7 @@ class Settings implements ISettings {
   Settings copyWith({
     String? theme,
     DateTime? lastUpdated,
+    int? updateFrequencyInHours,
     int? roundingDecimals,
     bool? showDragReorderHandles,
     bool? showCopyToClipboardButtons,
@@ -45,60 +49,50 @@ class Settings implements ISettings {
       Settings(
         theme: theme ?? this.theme,
         lastUpdated: lastUpdated ?? this.lastUpdated,
+        updateFrequencyInHours: updateFrequencyInHours ?? this.updateFrequencyInHours,
         roundingDecimals: roundingDecimals ?? this.roundingDecimals,
-        showDragReorderHandles:
-            showDragReorderHandles ?? this.showDragReorderHandles,
-        showCopyToClipboardButtons:
-            showCopyToClipboardButtons ?? this.showCopyToClipboardButtons,
-        showFullCurrencyNameLabel:
-            showFullCurrencyNameLabel ?? this.showFullCurrencyNameLabel,
+        showDragReorderHandles: showDragReorderHandles ?? this.showDragReorderHandles,
+        showCopyToClipboardButtons: showCopyToClipboardButtons ?? this.showCopyToClipboardButtons,
+        showFullCurrencyNameLabel: showFullCurrencyNameLabel ?? this.showFullCurrencyNameLabel,
         inputsPosition: inputsPosition ?? this.inputsPosition,
         showCurrencyRate: showCurrencyRate ?? this.showCurrencyRate,
       );
 
   // Factory method to create a Settings object from SharedPreferences
   factory Settings.fromPreferences(SharedPreferences prefs) {
+    final keys = Constants.keys.settings;
+
     return Settings(
-      theme: prefs.getString(Constants.keys.settings.theme) ?? "system",
-      lastUpdated: prefs.getString(Constants.keys.settings.lastUpdated) != null
-          ? DateTime.parse(
-              prefs.getString(Constants.keys.settings.lastUpdated)!)
-          : null,
-      roundingDecimals:
-          prefs.getInt(Constants.keys.settings.roundingDecimals) ?? 4,
-      showDragReorderHandles:
-          prefs.getInt(Constants.keys.settings.showDragReorderHandles) == 1,
-      showCopyToClipboardButtons:
-          prefs.getInt(Constants.keys.settings.showCopyToClipboardButtons) == 1,
-      showFullCurrencyNameLabel:
-          prefs.getInt(Constants.keys.settings.showFullCurrencyNameLabel) == 1,
-      inputsPosition:
-          prefs.getString(Constants.keys.settings.inputsPosition) ?? "center",
-      showCurrencyRate:
-          prefs.getString(Constants.keys.settings.showCurrencyRate) ??
-              "selected",
+      theme: prefs.getString(keys.theme) ?? "system",
+      lastUpdated:
+          prefs.getString(keys.lastUpdated) != null ? DateTime.parse(prefs.getString(keys.lastUpdated)!) : null,
+      updateFrequencyInHours: prefs.getInt(keys.updateFrequencyInHours) ?? 12,
+      roundingDecimals: prefs.getInt(keys.roundingDecimals) ?? 4,
+      showDragReorderHandles: prefs.getInt(keys.showDragReorderHandles) == 1,
+      showCopyToClipboardButtons: prefs.getInt(keys.showCopyToClipboardButtons) == 1,
+      showFullCurrencyNameLabel: prefs.getInt(keys.showFullCurrencyNameLabel) == 1,
+      inputsPosition: prefs.getString(keys.inputsPosition) ?? "center",
+      showCurrencyRate: prefs.getString(keys.showCurrencyRate) ?? "selected",
     );
   }
 
   // Method to save the settings to SharedPreferences
   @override
   Future<void> saveToPreferences(SharedPreferences prefs) async {
-    await prefs.setString(Constants.keys.settings.theme, theme);
+    final keys = Constants.keys.settings;
+
+    await prefs.setString(keys.theme, theme);
+
     if (lastUpdated != null) {
-      await prefs.setString(
-          Constants.keys.settings.lastUpdated, lastUpdated!.toIso8601String());
+      await prefs.setString(keys.lastUpdated, lastUpdated!.toIso8601String());
     }
-    await prefs.setInt(
-        Constants.keys.settings.roundingDecimals, roundingDecimals);
-    await prefs.setInt(Constants.keys.settings.showDragReorderHandles,
-        showDragReorderHandles ? 1 : 0);
-    await prefs.setInt(Constants.keys.settings.showCopyToClipboardButtons,
-        showCopyToClipboardButtons ? 1 : 0);
-    await prefs.setInt(Constants.keys.settings.showFullCurrencyNameLabel,
-        showFullCurrencyNameLabel ? 1 : 0);
-    await prefs.setString(
-        Constants.keys.settings.inputsPosition, inputsPosition);
-    await prefs.setString(
-        Constants.keys.settings.showCurrencyRate, showCurrencyRate);
+
+    await prefs.setInt(keys.updateFrequencyInHours, updateFrequencyInHours);
+    await prefs.setInt(keys.roundingDecimals, roundingDecimals);
+    await prefs.setInt(keys.showDragReorderHandles, showDragReorderHandles ? 1 : 0);
+    await prefs.setInt(keys.showCopyToClipboardButtons, showCopyToClipboardButtons ? 1 : 0);
+    await prefs.setInt(keys.showFullCurrencyNameLabel, showFullCurrencyNameLabel ? 1 : 0);
+    await prefs.setString(keys.inputsPosition, inputsPosition);
+    await prefs.setString(keys.showCurrencyRate, showCurrencyRate);
   }
 }

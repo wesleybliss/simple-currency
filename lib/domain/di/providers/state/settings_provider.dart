@@ -35,6 +35,12 @@ class SettingsNotifier extends _$SettingsNotifier {
     await updateSettings(newSettings);
   }
 
+  Future<void> setUpdateFrequencyInHours(int value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(updateFrequencyInHours: value);
+    await updateSettings(newSettings);
+  }
+
   Future<void> setRoundingDecimals(int value) async {
     final currentSettings = await future;
     final newSettings = currentSettings.copyWith(roundingDecimals: value);
@@ -43,23 +49,20 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   Future<void> setDragReorderHandles(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(
-        showDragReorderHandles: !currentSettings.showDragReorderHandles);
+    final newSettings = currentSettings.copyWith(showDragReorderHandles: !currentSettings.showDragReorderHandles);
     await updateSettings(newSettings);
   }
 
   Future<void> setShowCopyToClipboardButtons(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(
-        showCopyToClipboardButtons:
-            !currentSettings.showCopyToClipboardButtons);
+    final newSettings =
+        currentSettings.copyWith(showCopyToClipboardButtons: !currentSettings.showCopyToClipboardButtons);
     await updateSettings(newSettings);
   }
 
   Future<void> setShowFullCurrencyNameLabel(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(
-        showFullCurrencyNameLabel: !currentSettings.showFullCurrencyNameLabel);
+    final newSettings = currentSettings.copyWith(showFullCurrencyNameLabel: !currentSettings.showFullCurrencyNameLabel);
     await updateSettings(newSettings);
   }
 
@@ -86,9 +89,7 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   void cycleNextTheme() {
     if (state.value?.theme == "system") {
-      setThemeMode(getSystemBrightness() == Brightness.light
-          ? ThemeMode.dark
-          : ThemeMode.light);
+      setThemeMode(getSystemBrightness() == Brightness.light ? ThemeMode.dark : ThemeMode.light);
     } else if (state.value?.theme == "light") {
       setThemeMode(ThemeMode.dark);
     } else {
