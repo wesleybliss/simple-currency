@@ -23,3 +23,8 @@ A simple currency conversion app.
 3. Show full currency name label
 4. Position of inputs (top, middle, bottom)
 5. Show currency rate (all, selected, none)
+
+### Converters
+
+1. Temperature F to/from C
+2. Distance Miles to/from Kilometers

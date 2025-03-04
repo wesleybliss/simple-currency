@@ -6,16 +6,20 @@ import 'package:simple_currency/ui/screens/debug/debug_screen.dart';
 import 'package:simple_currency/ui/screens/error/ErrorScreen.dart';
 import 'package:simple_currency/ui/screens/home/home_screen.dart';
 import 'package:simple_currency/ui/screens/settings/settings_screen.dart';
+import 'package:simple_currency/ui/widgets/navbar.dart';
 import 'package:simple_currency/ui/widgets/toolbar.dart';
 
 typedef ParamsHandler = Widget Function(Map<String, dynamic> params);
 
-Widget _render(Widget child, String title, {withScaffold = true}) => withScaffold
-    ? Scaffold(
-        appBar: Toolbar(title: title),
-        body: child,
-      )
-    : child;
+Widget _render(Widget child, String title,
+        {withScaffold = true, withBottomBar = true}) =>
+    withScaffold
+        ? Scaffold(
+            appBar: Toolbar(title: title),
+            bottomNavigationBar: withBottomBar ? const Navbar() : null,
+            body: child,
+          )
+        : child;
 
 /*Handler handlerFor(Widget child, [RouteWrapper wrapper = RouteWrapper.normal]) {
   return Handler(handlerFunc: (context, params) {
@@ -36,7 +40,8 @@ Handler handlerFor(Widget child, String title, {withScaffold = true}) {
   });
 }
 
-Handler paramsHandlerFor(ParamsHandler childFn, String title, {withScaffold = true}) {
+Handler paramsHandlerFor(ParamsHandler childFn, String title,
+    {withScaffold = true}) {
   return Handler(
       handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
     final child = childFn(params);
@@ -44,7 +49,8 @@ Handler paramsHandlerFor(ParamsHandler childFn, String title, {withScaffold = tr
   });
 }
 
-final errorHandler = handlerFor(const ErrorScreen(message: '@todo Error'), Constants.strings.appName);
+final errorHandler = handlerFor(
+    const ErrorScreen(message: '@todo Error'), Constants.strings.appName);
 //final splashHandler = handlerFor(SplashScreen(), RouteWrapper.none);
 
 final debugHandler = handlerFor(const DebugScreen(), "Debug");
